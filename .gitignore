@@ -1,7 +1,3 @@
-!docker/volumes/mysql
-docker/volumes/mysql/*
-!docker/volumes/mysql/.gitkeep
-
-!docker/volumes/redis
-docker/volumes/redis/*
-!docker/volumes/redis/.gitkeep
+.env
+docker/logs/*
+docker/mysql/*
