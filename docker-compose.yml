@@ -201,6 +201,7 @@ services:
       - mysql
     working_dir: /var/www/html
     profiles: ["artisan"]
+    user: ${USER:-laravel} #system user
     entrypoint: ['php', '/var/www/html/artisan']
     networks:
       - laravel
