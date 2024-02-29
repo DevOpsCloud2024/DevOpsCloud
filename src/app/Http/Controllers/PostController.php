@@ -68,16 +68,24 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post): RedirectResponse
     {
-        //
+        $this->authorize('update', $post);
+        $validated = $request->validate([
+            'content' => 'required|string|max:255',
+        ]);
+
+        $post->update($validated);
+        return redirect(route('posts.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
-        //
+        $this->authorize('delete', $post);
+        $post->delete();
+        return redirect(route('posts.index'));
     }
 }
