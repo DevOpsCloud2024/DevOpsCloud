@@ -39,9 +39,10 @@ export default function Index({ auth, posts }) {
                     <input
                         type="file"
                         accept=".pdf"
-                        className="w-full"
+                        className="block w-full border-gray-300 rounded-md shadow-sm text-sm text-gray-900 cursor-pointer bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         onChange={e => setData('file', e.target.files[0])}
                     />
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">Allowed filetypes: .PDF (MAX. 5 Mb).</p>
 
                     <InputError message={errors.content} className="mt-2" />
                     <PrimaryButton className="mt-4" disabled={processing}>Post</PrimaryButton>
