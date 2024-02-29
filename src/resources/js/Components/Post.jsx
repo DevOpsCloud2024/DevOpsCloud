@@ -19,6 +19,14 @@ export default function Post({ post }) {
                     </div>
                 </div>
                 <p className="mt-4 text-lg text-gray-900">{post.content}</p>
+                {/* Download button */}
+                <a href={post.filepath} download>
+                    <button
+                        className="bg-indigo-600 text-white px-4 py-2 mt-4 rounded-md hover::shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-6"
+                        aria-label="Download File"
+                        title="Download File"
+                    >Download File</button>
+                </a>
             </div>
         </div>
     );

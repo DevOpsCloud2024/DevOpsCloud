@@ -10,6 +10,7 @@ export default function Index({ auth, posts }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
         content: '',
+        file: '',
     });
 
     const submit = (e) => {
@@ -35,6 +36,13 @@ export default function Index({ auth, posts }) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('content', e.target.value)}
                     ></textarea>
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        className="w-full"
+                        onChange={e => setData('file', e.target.files[0])}
+                    />
+
                     <InputError message={errors.content} className="mt-2" />
                     <PrimaryButton className="mt-4" disabled={processing}>Post</PrimaryButton>
                 </form>
