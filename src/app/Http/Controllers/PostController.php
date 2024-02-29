@@ -36,7 +36,13 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:64',
             'content' => 'required|string|max:255',
+            'file' => 'required|file:pdf',
         ]);
+
+        $validated['filepath'] = $validated['file']->store('public');
+        // Remove the 'public/' prefix from the file path
+        $validated['filepath'] = substr($validated['filepath'], 7);
+        $validated['filepath'] = asset('storage/' . $validated['filepath']);
 
         $request->user()->posts()->create($validated);
 

@@ -56,7 +56,6 @@ export default function Post({ post }) {
                         </Dropdown>
                     }
                 </div>
-                
                 {editing
                     ? <form onSubmit={submit}>
                         <textarea value={data.content} onChange={e => setData('content', e.target.value)} className="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"></textarea>
@@ -67,7 +66,14 @@ export default function Post({ post }) {
                         </div>
                     </form>
                     : <p className="mt-4 text-lg text-gray-900">{post.content}</p>
-                    }
+                }
+                <a href={post.filepath} download>
+                    <button
+                        className="bg-indigo-600 text-white px-4 py-2 mt-4 rounded-md hover::shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-6"
+                        aria-label="Download File"
+                        title="Download File"
+                    >Download File</button>
+                </a>
             </div>
         </div>
     );
