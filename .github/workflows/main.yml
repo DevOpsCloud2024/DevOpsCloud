@@ -76,6 +76,9 @@ jobs:
   run-tests:
     needs: [phplint, eslint]
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
 
     steps:
       - name: Checkout repository
@@ -85,9 +88,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.0"
-
-      - name: Move into the project directory
-        run: cd ./src
 
       - name: Install dependencies
         run: composer install --no-ansi --prefer-dist
