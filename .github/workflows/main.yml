@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run Laravel Pint
         uses: aglipanci/laravel-pint-action@2.0.0
@@ -31,7 +31,7 @@ jobs:
           verboseMode: "true"
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🔨 Fix linting issues"
           skip_fetch: true
@@ -44,15 +44,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: 8
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "pnpm"
@@ -67,7 +67,7 @@ jobs:
         run: rm -rf node_modules
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🔨 Fix linting issues"
           commit_user_name: "GitHub Actions"
@@ -79,7 +79,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -89,12 +89,26 @@ jobs:
       - name: Install dependencies
         run: composer install --no-ansi --prefer-dist
 
-      - name: Setup Laravel
-        run: cp .env.testing .env
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install -D
+
+      - name: Build assets
+        run: pnpm run build
+
 
       - name: Run tests
         run: ./vendor/bin/pest
-
 
       - name: Setup Composer cache
         id: composer-cache
