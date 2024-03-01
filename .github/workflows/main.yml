@@ -104,7 +104,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install -D
+        run: pnpm install
 
       - name: Build assets
         run: pnpm run build
