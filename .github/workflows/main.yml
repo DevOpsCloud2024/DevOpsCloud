@@ -72,3 +72,38 @@ jobs:
           commit_message: "🔨 Fix linting issues"
           commit_user_name: "GitHub Actions"
           skip_fetch: true
+
+  run-tests:
+    needs: [phplint, eslint]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.0"
+
+      - name: Install dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Setup Laravel
+        run: cp .env.testing .env
+
+      - name: Run tests
+        run: ./vendor/bin/pest
+
+
+      - name: Setup Composer cache
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
