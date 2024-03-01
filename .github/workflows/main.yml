@@ -63,6 +63,9 @@ jobs:
       - name: Run Prettier
         run: pnpm format:fix
 
+      - name: Remove node_modules
+        run: rm -rf node_modules
+
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
