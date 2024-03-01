@@ -1,0 +1,33 @@
+name: "CI/CD Pipeline"
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - "*"
+      - "*/*"
+      - "**"
+      - "!main"
+
+  pull_request:
+
+jobs:
+  phplint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Laravel Pint
+        uses: aglipanci/laravel-pint-action@2.0.0
+        with:
+          preset: "laravel"
+          verboseMode: "true"
+          testMode: "true"
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "🔨 Fix linting issues"
+          skip_fetch: true
