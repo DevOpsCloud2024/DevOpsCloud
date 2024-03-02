@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -87,5 +88,14 @@ class PostController extends Controller
         $this->authorize('delete', $post);
         $post->delete();
         return redirect(route('posts.index'));
+    }
+
+    public function ratepost(Request $request, Post $post) {
+        //$rating = new Rating();
+        //$rating->user_id = Auth::id();
+        //$rating->rating = $request->input('rating');
+        //$post->ratings()->save($rating);
+        $post->rateOnce($request->input('rating'), null, Auth::id());
+        return redirect()->back();
     }
 }
