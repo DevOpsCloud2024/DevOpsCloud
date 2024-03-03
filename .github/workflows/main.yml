@@ -110,7 +110,10 @@ jobs:
         run: pnpm run build
 
       - name: Run migrations
-        run: php artisan migrate --force
+        env:
+          DB_CONNECTION: "sqlite"
+          DB_DATABASE: ":memory:"
+        run: php artisan migrate:fresh --seed
 
       - name: Generate application key
         run: php artisan key:generate
