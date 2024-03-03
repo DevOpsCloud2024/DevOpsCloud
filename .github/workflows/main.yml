@@ -103,6 +103,9 @@ jobs:
           node-version: "18"
           cache: "pnpm"
 
+      - name: "Configure .env"
+        run: cp .env.ci .env
+
       - name: Install dependencies
         run: pnpm install
 
@@ -110,9 +113,6 @@ jobs:
         run: pnpm run build
 
       - name: Run migrations
-        env:
-          DB_CONNECTION: "sqlite"
-          DB_DATABASE: ":memory:"
         run: php artisan migrate:fresh --seed --force
 
       - name: Generate application key
