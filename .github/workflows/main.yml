@@ -113,7 +113,7 @@ jobs:
         env:
           DB_CONNECTION: "sqlite"
           DB_DATABASE: ":memory:"
-        run: php artisan migrate:fresh --seed
+        run: php artisan migrate:fresh --seed --force
 
       - name: Generate application key
         run: php artisan key:generate
