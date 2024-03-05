@@ -37,17 +37,11 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function rating()
-    {
-        return $this->hasMany(Rating::class);
-    }
-
-    // public function averageRating()
-    // {
-    //     return $this->averageRating();
-    // }
-
-    // For some reason not in package
+    /**
+     * This function is necessary for the ratings.
+     * It is missing from the ratings package for unknown reasons,
+     * so we include it here.
+     */
     public function getTimesRatedAttribute(){
         return $this->timesRated();
     }

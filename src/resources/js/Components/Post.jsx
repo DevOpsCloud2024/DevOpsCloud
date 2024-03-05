@@ -17,7 +17,6 @@ export default function Post({ post }) {
 
     const { data, setData, patch, clearErrors, reset, errors } = useForm({
         content: post.content,
-        rating: 0,
     });
 
     const submit = (e) => {
