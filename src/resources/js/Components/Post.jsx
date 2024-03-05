@@ -5,13 +5,14 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useForm, usePage } from '@inertiajs/react'
+import { Rating } from 'react-simple-star-rating'
 
 dayjs.extend(relativeTime);
 
 export default function Post({ docpost }) {
     const { auth } = usePage().props;
 
-    const [editing, setEditing] = useState(false);
+    const [editing, setEditing, rating, setRating] = useState(false);
 
     const { data, setData, patch, post, clearErrors, reset, errors } = useForm({
         content: docpost.content,
@@ -29,10 +30,20 @@ export default function Post({ docpost }) {
     //     post(route('posts.ratepost', post.id), { onSuccess: () => console.log('Pressed button') });
     // };
 
-    const rate = (e) => {
-        e.preventDefault();
-        post(route('posts.ratepost', docpost.id), { onSuccess: () => reset() });
-    };
+    // const rate = (e) => {
+    //     e.preventDefault();
+    //     post(route('posts.ratepost', docpost.id), { onSuccess: () => reset() });
+    // };
+
+    // Catch Rating value
+    const handleRating = (rate) => {
+        post(route('posts.ratepost', {'post': docpost.id, 'rating': rate}));
+    }
+
+    // Optinal callback functions
+    const onPointerEnter = () => console.log('Enter')
+    const onPointerLeave = () => console.log('Leave')
+    const onPointerMove = (value, index) => console.log(value, index)
 
     return (
         <div className="p-6 flex space-x-2">
@@ -86,7 +97,7 @@ export default function Post({ docpost }) {
                     >Download File</button>
                 </a>
 
-                <form onSubmit={rate} class="form-horizontal poststars" id="rating" method="POST">
+                {/* <form onSubmit={rate} class="form-horizontal poststars" id="rating" method="POST">
                     <input
                         type="number"
                         value={data.rating}
@@ -95,11 +106,33 @@ export default function Post({ docpost }) {
                         max="5"
                     />
                     <PrimaryButton className="mt-4">Rate</PrimaryButton>
-                </form>
+                </form> */}
                 <p className="mt-4 text-lg text-gray-900">Avg rating: {docpost.average_rating}</p>
                 <p className="mt-4 text-lg text-gray-900">Number of ratings: {docpost.times_rated}</p>
                 <p className="mt-4 text-lg text-gray-900">Rating by this user: {docpost.user_average_rating}</p>
 
+                <div className="flex-1">
+                    <p className="mt-4 text-lg text-gray-900">Should be a rating here</p>
+                    <Rating
+                        onClick={handleRating}
+                        onPointerEnter={onPointerEnter}
+                        onPointerLeave={onPointerLeave}
+                        onPointerMove={onPointerMove}
+                        initialValue={docpost.user_average_rating}
+                        SVGstyle={{'display': 'inline'}} // To prevent stars from displaying vertical
+                    />
+                    <p className="mt-4 text-lg text-gray-900">Existing ratings:</p>
+                    <Rating
+                        onClick={handleRating}
+                        onPointerEnter={onPointerEnter}
+                        onPointerLeave={onPointerLeave}
+                        onPointerMove={onPointerMove}
+                        initialValue={docpost.average_rating}
+                        readonly={true}
+                        allowFraction={true}
+                        SVGstyle={{'display': 'inline'}} // To prevent stars from displaying vertical
+                    />
+                </div>
             </div>
         </div>
     );

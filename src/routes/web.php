@@ -45,7 +45,11 @@ Route::resource('posts', PostController::class)
 //Route::post('rate-post', 'PostController@ratepost')->name('post.rate');
 
 // Add a custom route for your custom function
-Route::post('posts/{post}/ratepost', [PostController::class, 'ratepost'])
+// Route::post('posts/{post}/ratepost', [PostController::class, 'ratepost'])
+//     ->name('posts.ratepost')
+//     ->middleware(['auth', 'verified']);
+
+Route::post('posts/{post}/ratepost/{rating}', [PostController::class, 'ratepost'])
     ->name('posts.ratepost')
     ->middleware(['auth', 'verified']);
 

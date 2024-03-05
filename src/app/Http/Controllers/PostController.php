@@ -90,12 +90,17 @@ class PostController extends Controller
         return redirect(route('posts.index'));
     }
 
-    public function ratepost(Request $request, Post $post) {
-        //$rating = new Rating();
-        //$rating->user_id = Auth::id();
-        //$rating->rating = $request->input('rating');
-        //$post->ratings()->save($rating);
-        $post->rateOnce($request->input('rating'), null, Auth::id());
+    // public function ratepost(Request $request, Post $post) {
+    //     //$rating = new Rating();
+    //     //$rating->user_id = Auth::id();
+    //     //$rating->rating = $request->input('rating');
+    //     //$post->ratings()->save($rating);
+    //     $post->rateOnce($request->input('rating'), null, Auth::id());
+    //     return redirect()->back();
+    // }
+
+    public function ratepost(Post $post, int $rating) {
+        $post->rateOnce($rating, null, Auth::id());
         return redirect()->back();
     }
 }
