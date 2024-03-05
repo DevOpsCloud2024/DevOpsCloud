@@ -97,6 +97,8 @@ export default function Post({ docpost }) {
                     <PrimaryButton className="mt-4">Rate</PrimaryButton>
                 </form>
                 <p className="mt-4 text-lg text-gray-900">Avg rating: {docpost.average_rating}</p>
+                <p className="mt-4 text-lg text-gray-900">Number of ratings: {docpost.times_rated}</p>
+                <p className="mt-4 text-lg text-gray-900">Rating by this user: {docpost.user_average_rating}</p>
 
             </div>
         </div>

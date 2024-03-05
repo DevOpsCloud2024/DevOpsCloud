@@ -27,7 +27,7 @@ class Post extends Model
      *
      * @var array
      */
-    protected $appends = ['average_rating'];
+    protected $appends = ['user_average_rating', 'average_rating', 'times_rated'];
 
     /**
      * Get the user that owns the post.
@@ -46,4 +46,9 @@ class Post extends Model
     // {
     //     return $this->averageRating();
     // }
+
+    // For some reason not in package
+    public function getTimesRatedAttribute(){
+        return $this->timesRated();
+    }
 }
