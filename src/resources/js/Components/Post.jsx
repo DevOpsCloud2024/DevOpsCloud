@@ -78,7 +78,7 @@ export default function Post({ post }) {
                         title="Download File"
                     >Download File</button>
                 </a>
-                <GiveRating post={post} />
+                {post.user.id !== auth.user.id && <GiveRating post={post} />}
             </div>
         </div>
     );
