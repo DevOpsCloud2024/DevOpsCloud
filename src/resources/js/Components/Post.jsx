@@ -5,45 +5,26 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useForm, usePage } from '@inertiajs/react'
-import { Rating } from 'react-simple-star-rating'
+import AverageRating from '@/Components/AverageRating';
+import GiveRating from '@/Components/GiveRating';
 
 dayjs.extend(relativeTime);
 
-export default function Post({ docpost }) {
+export default function Post({ post }) {
     const { auth } = usePage().props;
 
-    const [editing, setEditing, rating, setRating] = useState(false);
+    const [editing, setEditing] = useState(false);
 
-    const { data, setData, patch, post, clearErrors, reset, errors } = useForm({
-        content: docpost.content,
+    const { data, setData, patch, clearErrors, reset, errors } = useForm({
+        content: post.content,
         rating: 0,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        patch(route('posts.update', docpost.id), { onSuccess: () => setEditing(false) });
+        patch(route('posts.update', post.id), { onSuccess: () => setEditing(false) });
 
     };
-
-    // const rate = (e) => {
-    //     e.preventDefault();
-    //     post(route('posts.ratepost', post.id), { onSuccess: () => console.log('Pressed button') });
-    // };
-
-    // const rate = (e) => {
-    //     e.preventDefault();
-    //     post(route('posts.ratepost', docpost.id), { onSuccess: () => reset() });
-    // };
-
-    // Catch Rating value
-    const handleRating = (rate) => {
-        post(route('posts.ratepost', {'post': docpost.id, 'rating': rate}));
-    }
-
-    // Optinal callback functions
-    const onPointerEnter = () => console.log('Enter')
-    const onPointerLeave = () => console.log('Leave')
-    const onPointerMove = (value, index) => console.log(value, index)
 
     return (
         <div className="p-6 flex space-x-2">
@@ -53,12 +34,13 @@ export default function Post({ docpost }) {
             <div className="flex-1">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{docpost.title}</h3>
-                        <span className="text-gray-800">{docpost.user.name}</span>
-                        <small className="ml-2 text-sm text-gray-600">{dayjs(docpost.created_at).fromNow()}</small>
-                        { docpost.created_at !== docpost.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>}
+                        <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
+                        <span className="text-gray-800">{post.user.name}</span>
+                        <small className="ml-2 text-sm text-gray-600">{dayjs(post.created_at).fromNow()}</small>
+                        { post.created_at !== post.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>}
+                        <AverageRating post={post} />
                     </div>
-                    {(docpost.user.id === auth.user.id || auth.user.is_admin) &&
+                    {(post.user.id === auth.user.id || auth.user.is_admin) &&
                         <Dropdown>
                             <Dropdown.Trigger>
                                 <button>
@@ -71,7 +53,7 @@ export default function Post({ docpost }) {
                                 <button className="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out" onClick={() => setEditing(true)}>
                                     Edit
                                 </button>
-                                <Dropdown.Link as="button" href={route('posts.destroy', docpost.id)} method="delete">
+                                <Dropdown.Link as="button" href={route('posts.destroy', post.id)} method="delete">
                                     Delete
                                 </Dropdown.Link>
                             </Dropdown.Content>
@@ -87,52 +69,16 @@ export default function Post({ docpost }) {
                             <button className="mt-4" onClick={() => { setEditing(false); reset(); clearErrors(); }}>Cancel</button>
                         </div>
                     </form>
-                    : <p className="mt-4 text-lg text-gray-900">{docpost.content}</p>
+                    : <p className="mt-4 text-lg text-gray-900">{post.content}</p>
                 }
-                <a href={docpost.filepath} download>
+                <a href={post.filepath} download>
                     <button
                         className="bg-indigo-600 text-white px-4 py-2 mt-4 rounded-md hover::shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-6"
                         aria-label="Download File"
                         title="Download File"
                     >Download File</button>
                 </a>
-
-                {/* <form onSubmit={rate} class="form-horizontal poststars" id="rating" method="POST">
-                    <input
-                        type="number"
-                        value={data.rating}
-                        onChange={(e) => setData('rating', e.target.value)}
-                        min="1"
-                        max="5"
-                    />
-                    <PrimaryButton className="mt-4">Rate</PrimaryButton>
-                </form> */}
-                <p className="mt-4 text-lg text-gray-900">Avg rating: {docpost.average_rating}</p>
-                <p className="mt-4 text-lg text-gray-900">Number of ratings: {docpost.times_rated}</p>
-                <p className="mt-4 text-lg text-gray-900">Rating by this user: {docpost.user_average_rating}</p>
-
-                <div className="flex-1">
-                    <p className="mt-4 text-lg text-gray-900">Should be a rating here</p>
-                    <Rating
-                        onClick={handleRating}
-                        onPointerEnter={onPointerEnter}
-                        onPointerLeave={onPointerLeave}
-                        onPointerMove={onPointerMove}
-                        initialValue={docpost.user_average_rating}
-                        SVGstyle={{'display': 'inline'}} // To prevent stars from displaying vertical
-                    />
-                    <p className="mt-4 text-lg text-gray-900">Existing ratings:</p>
-                    <Rating
-                        onClick={handleRating}
-                        onPointerEnter={onPointerEnter}
-                        onPointerLeave={onPointerLeave}
-                        onPointerMove={onPointerMove}
-                        initialValue={docpost.average_rating}
-                        readonly={true}
-                        allowFraction={true}
-                        SVGstyle={{'display': 'inline'}} // To prevent stars from displaying vertical
-                    />
-                </div>
+                <GiveRating post={post} />
             </div>
         </div>
     );

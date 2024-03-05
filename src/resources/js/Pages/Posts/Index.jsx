@@ -50,7 +50,7 @@ export default function Index({ auth, posts }) {
 
                 <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
                     {posts.map(post =>
-                        <Post key={post.id} docpost={post} />
+                        <Post key={post.id} post={post} />
                     )}
                     </div>
             </div>

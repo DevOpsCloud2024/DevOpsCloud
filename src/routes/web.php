@@ -36,21 +36,8 @@ Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
-// Route::resource('ratings', RatingController::class)
-//     ->only(['index', 'store'])
-//     ->middleware(['auth', 'verified']);
-
-//Route::post('/rating/{post}', 'PostController@ratePost')->name('ratePost');
-//Route::post('/rating', [PostController::class, 'ratePost'])->name('rating.rate');
-//Route::post('rate-post', 'PostController@ratepost')->name('post.rate');
-
-// Add a custom route for your custom function
-// Route::post('posts/{post}/ratepost', [PostController::class, 'ratepost'])
-//     ->name('posts.ratepost')
-//     ->middleware(['auth', 'verified']);
-
-Route::post('posts/{post}/ratepost/{rating}', [PostController::class, 'ratepost'])
-    ->name('posts.ratepost')
+Route::post('rate/{post}/{rating}', [PostController::class, 'rate'])
+    ->name('post.rate')
     ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
