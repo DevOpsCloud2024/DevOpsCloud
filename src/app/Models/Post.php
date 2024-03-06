@@ -19,12 +19,21 @@ class Post extends Model
         'title',
         'content',
         'filepath',
+        'type_id',
     ];
 
     /**
      * Get the user that owns the post.
      */
     public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the type that the post belongs to.
+     */
+    public function type(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

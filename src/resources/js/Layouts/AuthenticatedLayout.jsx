@@ -27,6 +27,12 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('posts.index')} active={route().current('posts.index')}>
                                     Posts
                                 </NavLink>
+                                <NavLink href={route('filter')} active={route().current('filter')}>
+                                    Filter
+                                </NavLink>
+                                <NavLink href={route('types.index')} active={route().current('types.index')}>
+                                    Types
+                                </NavLink>
                             </div>
                         </div>
 
@@ -101,6 +107,13 @@ export default function Authenticated({ user, header, children }) {
                         <ResponsiveNavLink href={route('posts.index')} active={route().current('posts.index')}>
                             Posts
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('filter')} active={route().current('filter')}>
+                            Filter
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('types.index')} active={route().current('types.index')}>
+                            Types
+                        </ResponsiveNavLink>
+                        
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

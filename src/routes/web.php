@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\TypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +32,17 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+Route::get('/filter', function () {
+    return Inertia::render('Filter', [
+        'posts' => Post::with('user:id,name')->latest()->get(),
+    ]);
+})->middleware(['auth', 'verified'])->name('filter');
+
+
+Route::resource('types', TypeController::class)
+    ->only(['index', 'store'])
+    ->middleware(['auth', 'verified']);
 
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])

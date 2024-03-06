@@ -4,6 +4,7 @@ import Post from '@/Components/Post';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, Head } from '@inertiajs/react';
+import Select from 'react-select';
 
 
 export default function Index({ auth, posts }) {
@@ -11,6 +12,7 @@ export default function Index({ auth, posts }) {
         title: '',
         content: '',
         file: '',
+        type_id: '',
     });
 
     const submit = (e) => {
@@ -18,9 +20,19 @@ export default function Index({ auth, posts }) {
         post(route('posts.store'), { onSuccess: () => reset() });
     };
 
+    const options = [
+        { value: 1, label: 'Chocolate' },
+        { value: 2, label: 'Strawberry' },
+        { value: 3, label: 'Vanilla' }
+    ]
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Posts" />
+
+            <div>
+                {'testetstest' + data.type_id}
+            </div>
 
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
                 <form onSubmit={submit}>
@@ -36,6 +48,16 @@ export default function Index({ auth, posts }) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('content', e.target.value)}
                     ></textarea>
+                    <Select
+                        // isMulti
+                        name="colors"
+                        options={options}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen => setData('type_id', chosen.value)}
+                    />
                     <input
                         type="file"
                         accept=".pdf"
@@ -52,7 +74,7 @@ export default function Index({ auth, posts }) {
                     {posts.map(post =>
                         <Post key={post.id} post={post} />
                     )}
-                    </div>
+                </div>
             </div>
         </AuthenticatedLayout>
     );

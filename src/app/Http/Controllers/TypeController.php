@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Type;
 
-class PostController extends Controller
+class TypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        return Inertia::render('Posts/Index', [
-            'posts' => Post::with('user:id,name')->latest()->get(),
-        ]);
+        return Inertia::render('Types/Index');
     }
 
     /**
@@ -34,20 +32,14 @@ class PostController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:64',
-            'content' => 'required|string|max:255',
-            'file' => 'required|file:pdf',
-            'type_id' => 'required|int',
+            'new_type' => 'required|string|max:64',
         ]);
 
-        $validated['filepath'] = $validated['file']->store('public');
-        // Remove the 'public/' prefix from the file path
-        $validated['filepath'] = substr($validated['filepath'], 7);
-        $validated['filepath'] = asset('storage/' . $validated['filepath']);
+        $type = new Type;
+        $type->name = $validated['new_type'];
+        $type->save();
 
-        $request->user()->posts()->create($validated);
-
-        return redirect()->route('posts.index');
+        return redirect()->route('types.index');
     }
 
     /**
@@ -71,13 +63,7 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post): RedirectResponse
     {
-        $this->authorize('update', $post);
-        $validated = $request->validate([
-            'content' => 'required|string|max:255',
-        ]);
-
-        $post->update($validated);
-        return redirect(route('posts.index'));
+        //
     }
 
     /**
@@ -85,8 +71,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
-        $this->authorize('delete', $post);
-        $post->delete();
-        return redirect(route('posts.index'));
+        //
     }
 }
