@@ -1,5 +1,5 @@
-import React from 'react';
-import { Rating } from 'react-simple-star-rating'
+import React from "react";
+import { Rating } from "react-simple-star-rating";
 
 export default function AverageRating({ post }) {
     return (
@@ -8,7 +8,7 @@ export default function AverageRating({ post }) {
                 initialValue={post.average_rating}
                 readonly={true}
                 allowFraction={true}
-                SVGstyle={{'display': 'inline'}} // To prevent stars from displaying vertically
+                SVGstyle={{ display: "inline" }} // To prevent stars from displaying vertically
             />
             ({post.times_rated} reviews)
         </div>

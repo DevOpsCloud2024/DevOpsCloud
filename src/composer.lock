@@ -5340,9 +5340,7 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "willvincent\\Rateable\\RateableServiceProvider"
-                    ]
+                    "providers": ["willvincent\\Rateable\\RateableServiceProvider"]
                 }
             },
             "autoload": {
@@ -5351,9 +5349,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
+            "license": ["MIT"],
             "authors": [
                 {
                     "name": "Will Vincent",

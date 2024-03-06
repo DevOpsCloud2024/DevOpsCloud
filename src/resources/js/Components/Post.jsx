@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Dropdown from '@/Components/Dropdown';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import { useForm, usePage } from '@inertiajs/react'
-import AverageRating from '@/Components/AverageRating';
-import GiveRating from '@/Components/GiveRating';
+import React, { useState } from "react";
+import Dropdown from "@/Components/Dropdown";
+import InputError from "@/Components/InputError";
+import PrimaryButton from "@/Components/PrimaryButton";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { useForm, usePage } from "@inertiajs/react";
+import AverageRating from "@/Components/AverageRating";
+import GiveRating from "@/Components/GiveRating";
 
 dayjs.extend(relativeTime);
 
@@ -45,8 +45,12 @@ export default function Post({ post }) {
                     <div>
                         <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
                         <span className="text-gray-800">{post.user.name}</span>
-                        <small className="ml-2 text-sm text-gray-600">{dayjs(post.created_at).fromNow()}</small>
-                        { post.created_at !== post.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>}
+                        <small className="ml-2 text-sm text-gray-600">
+                            {dayjs(post.created_at).fromNow()}
+                        </small>
+                        {post.created_at !== post.updated_at && (
+                            <small className="text-sm text-gray-600"> &middot; edited</small>
+                        )}
                         <AverageRating post={post} />
                         {/* <small className="ml-2 text-sm text-gray-600">
                             {dayjs(post.created_at).fromNow()}
