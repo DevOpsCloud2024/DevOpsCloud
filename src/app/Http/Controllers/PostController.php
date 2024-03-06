@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -43,7 +43,7 @@ class PostController extends Controller
         $validated['filepath'] = $validated['file']->store('public');
         // Remove the 'public/' prefix from the file path
         $validated['filepath'] = substr($validated['filepath'], 7);
-        $validated['filepath'] = asset('storage/' . $validated['filepath']);
+        $validated['filepath'] = asset('storage/'.$validated['filepath']);
 
         $request->user()->posts()->create($validated);
 
@@ -77,6 +77,7 @@ class PostController extends Controller
         ]);
 
         $post->update($validated);
+
         return redirect(route('posts.index'));
     }
 
@@ -87,15 +88,17 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
+
         return redirect(route('posts.index'));
     }
 
-    /** 
+    /**
      * Rate a post.
      */
-    public function rate(Post $post, int $rating) {
+    public function rate(Post $post, int $rating)
+    {
         $post->rateOnce($rating, null, Auth::id());
+
         return redirect()->back();
     }
-
 }
