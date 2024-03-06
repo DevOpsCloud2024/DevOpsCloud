@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
@@ -36,6 +37,9 @@ Route::get('/dashboard', function () {
 Route::get('/filter', function () {
     return Inertia::render('Filter', [
         'posts' => Post::with('user:id,name')->latest()->get(),
+        'types' => DB::table('types')->get(),
+        'labels' => DB::table('labels')->get(),
+        'label_post' => DB::table('label_post')->get(),
     ]);
 })->middleware(['auth', 'verified'])->name('filter');
 
@@ -43,6 +47,11 @@ Route::get('/filter', function () {
 Route::resource('types', TypeController::class)
     ->only(['index', 'store'])
     ->middleware(['auth', 'verified']);
+
+
+Route::resource('labels', LabelController::class)
+->only(['store'])
+->middleware(['auth', 'verified']);
 
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])

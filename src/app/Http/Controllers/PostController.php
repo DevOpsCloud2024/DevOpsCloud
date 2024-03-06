@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Type;
+use App\Models\Label;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -17,6 +20,8 @@ class PostController extends Controller
     {
         return Inertia::render('Posts/Index', [
             'posts' => Post::with('user:id,name')->latest()->get(),
+            'types' => DB::table('types')->get(),
+            'labels' => DB::table('labels')->get(),
         ]);
     }
 
@@ -45,7 +50,8 @@ class PostController extends Controller
         $validated['filepath'] = substr($validated['filepath'], 7);
         $validated['filepath'] = asset('storage/' . $validated['filepath']);
 
-        $request->user()->posts()->create($validated);
+        $post = $request->user()->posts()->create($validated);
+        $post->labels()->attach($request->label_ids);
 
         return redirect()->route('posts.index');
     }

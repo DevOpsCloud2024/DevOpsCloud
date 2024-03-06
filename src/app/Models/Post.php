@@ -35,6 +35,14 @@ class Post extends Model
      */
     public function type(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Type::class);
+    }
+
+    /**
+     * The labels that belong to the post.
+     */
+    public function labels()
+    {
+        return $this->belongsToMany(Label::class);
     }
 }

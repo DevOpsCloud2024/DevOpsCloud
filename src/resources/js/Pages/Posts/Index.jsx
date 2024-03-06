@@ -7,12 +7,13 @@ import { useForm, Head } from '@inertiajs/react';
 import Select from 'react-select';
 
 
-export default function Index({ auth, posts }) {
+export default function Index({ auth, posts, types, labels }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
         content: '',
         file: '',
         type_id: '',
+        label_ids: [],
     });
 
     const submit = (e) => {
@@ -20,18 +21,19 @@ export default function Index({ auth, posts }) {
         post(route('posts.store'), { onSuccess: () => reset() });
     };
 
-    const options = [
-        { value: 1, label: 'Chocolate' },
-        { value: 2, label: 'Strawberry' },
-        { value: 3, label: 'Vanilla' }
-    ]
+    let options_types = []
+    types.map(t => options_types.push({value: t.id, label:t.name}))
+    let options_labels = []
+    labels.map(l => options_labels.push({value: l.id, label:l.name}))
 
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Posts" />
 
             <div>
-                {'testetstest' + data.type_id}
+                {'testetstest' + data.label_ids}
+                {'       types:' + types +'_____   ' + options_types[0].value}
+                {'       labels:' + labels}
             </div>
 
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -50,13 +52,25 @@ export default function Index({ auth, posts }) {
                     ></textarea>
                     <Select
                         // isMulti
+                        placeholder="Type of document"
                         name="colors"
-                        options={options}
+                        options={options_types}
                         className="type"
                         classNamePrefix="select"
                         isSearchable="true"
                         isClearable="true"
                         onChange={chosen => setData('type_id', chosen.value)}
+                    />
+                    <Select
+                        isMulti
+                        placeholder="Labels"
+                        name="colors"
+                        options={options_labels}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen => setData('label_ids', chosen.map(c => c.value))}
                     />
                     <input
                         type="file"
