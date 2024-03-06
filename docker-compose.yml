@@ -220,3 +220,24 @@ services:
     entrypoint: ['npm']
     networks:
       - laravel
+
+  pint:
+    build:
+      context: ./docker
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+        - USER=${USER:-laravel}
+    container_name: pint
+    volumes:
+      - ./src:/var/www/html
+      - .env:/var/www/html/.env
+    depends_on:
+      - mysql
+    working_dir: /var/www/html
+    profiles: ["pint"]
+    user: ${USER:-laravel} #system user
+    entrypoint: ['php', '/var/www/html/vendor/bin/pint']
+    networks:
+      - laravel

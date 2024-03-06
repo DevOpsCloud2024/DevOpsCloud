@@ -43,7 +43,7 @@ class PostController extends Controller
         $validated['filepath'] = $validated['file']->store('public');
         // Remove the 'public/' prefix from the file path
         $validated['filepath'] = substr($validated['filepath'], 7);
-        $validated['filepath'] = asset('storage/' . $validated['filepath']);
+        $validated['filepath'] = asset('storage/'.$validated['filepath']);
 
         $request->user()->posts()->create($validated);
 
@@ -77,6 +77,7 @@ class PostController extends Controller
         ]);
 
         $post->update($validated);
+
         return redirect(route('posts.index'));
     }
 
@@ -87,6 +88,7 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
+
         return redirect(route('posts.index'));
     }
 
