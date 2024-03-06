@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use willvincent\Rateable\Rateable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -42,7 +43,8 @@ class Post extends Model
      * It is missing from the ratings package for unknown reasons,
      * so we include it here.
      */
-    public function getTimesRatedAttribute(){
+    public function getTimesRatedAttribute()
+    {
         return $this->timesRated();
     }
 }

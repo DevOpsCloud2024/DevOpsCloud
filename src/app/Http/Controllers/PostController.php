@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -92,12 +92,13 @@ class PostController extends Controller
         return redirect(route('posts.index'));
     }
 
-    /** 
+    /**
      * Rate a post.
      */
-    public function rate(Post $post, int $rating) {
+    public function rate(Post $post, int $rating)
+    {
         $post->rateOnce($rating, null, Auth::id());
+
         return redirect()->back();
     }
-
 }
