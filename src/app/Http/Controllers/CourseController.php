@@ -100,21 +100,4 @@ class CourseController extends Controller
     {
         //
     }
-
-    // /**
-    //  * Enroll a student to a course.
-    //  */
-    // public function enroll(Request $request, Course $course, bool $enroll): RedirectResponse
-    // {
-    //     $user = $request->user();
-    //     if ($enroll) {
-    //         // Enroll the authenticated user in the specified course
-    //         $user->courses()->attach($course->id);
-    //         // return redirect()->route('courses.index')->with('Success', 'You have been enrolled in the course successfully.');
-    //     } else {
-    //         // Remove the enrollment of the authenticated user in the specified course
-    //         $user->courses()->detach($course->id);
-    //     }
-    //     return redirect(route('courses.index'));
-    // }
 }
