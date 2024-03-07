@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Post;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
 
 class PostTest extends TestCase
 {
@@ -21,24 +20,24 @@ class PostTest extends TestCase
             ->post('/posts', [
                 'title' => 'Post Title',
                 'content' => 'This is a post',
-                'file' => UploadedFile::fake()->create('summary.pdf')
+                'file' => UploadedFile::fake()->create('summary.pdf'),
             ]);
-    
+
         $this->assertDatabaseHas('posts', [
-            'title' => 'Post Title'
+            'title' => 'Post Title',
         ]);
-    
+
         $this->assertDatabaseCount('posts', 1);
     }
 
     public function test_not_logged_in(): void
     {
         $response = $this->post('/posts', [
-                'title' => 'Post Title',
-                'content' => 'This is a post',
-                'file' => UploadedFile::fake()->create('summary.pdf')
-            ]);
-    
+            'title' => 'Post Title',
+            'content' => 'This is a post',
+            'file' => UploadedFile::fake()->create('summary.pdf'),
+        ]);
+
         $this->assertDatabaseCount('posts', 0);
     }
 
@@ -50,9 +49,9 @@ class PostTest extends TestCase
             ->post('/posts', [
                 'title' => 'Post Title',
                 'content' => 'This is a post',
-                'file' => ''
+                'file' => '',
             ]);
-    
+
         $this->assertDatabaseCount('posts', 0);
     }
 
@@ -64,18 +63,18 @@ class PostTest extends TestCase
             'title' => 'Post Title',
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
-            'filepath' => 'summary.pdf'
+            'filepath' => 'summary.pdf',
         ]);
 
         $this->assertDatabaseCount('posts', 1);
 
         // Must be user that created the post.
-        $response = $this->actingAs($user)->delete('/posts/' . $post->id);
+        $response = $this->actingAs($user)->delete('/posts/'.$post->id);
 
         $this->assertDatabaseMissing('posts', [
             'title' => 'Post Title',
-           ]);
-    
+        ]);
+
         $this->assertDatabaseCount('posts', 0);
     }
 
@@ -87,18 +86,18 @@ class PostTest extends TestCase
             'title' => 'Post Title',
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
-            'filepath' => 'summary.pdf'
+            'filepath' => 'summary.pdf',
         ]);
 
         $this->assertDatabaseCount('posts', 1);
 
         $different_user = User::factory()->create();
-        $response = $this->actingAs($different_user)->delete('/posts/' . $post->id);
+        $response = $this->actingAs($different_user)->delete('/posts/'.$post->id);
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Post Title',
-           ]);
-    
+        ]);
+
         $this->assertDatabaseCount('posts', 1);
     }
 
@@ -110,18 +109,18 @@ class PostTest extends TestCase
             'title' => 'Post Title',
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
-            'filepath' => 'summary.pdf'
+            'filepath' => 'summary.pdf',
         ]);
 
         $this->assertDatabaseCount('posts', 1);
 
         $admin = User::factory()->create(['is_admin' => true]);
-        $response = $this->actingAs($admin)->delete('/posts/' . $post->id);
+        $response = $this->actingAs($admin)->delete('/posts/'.$post->id);
 
         $this->assertDatabaseMissing('posts', [
             'title' => 'Post Title',
-           ]);
-    
+        ]);
+
         $this->assertDatabaseCount('posts', 0);
     }
 }
