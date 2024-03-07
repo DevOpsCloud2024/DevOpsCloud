@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -32,6 +33,10 @@ Route::get('/dashboard', function () {
 
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('courses', CourseController::class)
+    ->only(['index', 'store', 'update', 'destroy', 'enroll'])
     ->middleware(['auth', 'verified']);
 
 Route::post('rate/{post}/{rating}', [PostController::class, 'rate'])
