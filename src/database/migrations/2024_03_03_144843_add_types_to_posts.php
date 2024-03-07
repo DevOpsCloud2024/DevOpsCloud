@@ -11,14 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('type_id');
-        });
-
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->timestamps();
+        });
+
+        Schema::create('post_type', function (Blueprint $table) {
+            $table->foreignId('post_id');
+            $table->foreignId('type_id');
+        });
+
+        Schema::create('labels', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
+        });
+
+        Schema::create('label_post', function (Blueprint $table) {
+            $table->foreignId('post_id');
+            $table->foreignId('label_id');
         });
 
     }
@@ -28,10 +40,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('type_id');
-        });
-
         Schema::dropIfExists('types');
+        Schema::dropIfExists('post_types');
+
+        Schema::dropIfExists('labels');
+        Schema::dropIfExists('label_post');
     }
 };

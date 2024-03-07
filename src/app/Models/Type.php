@@ -21,8 +21,8 @@ class Type extends Model
     /**
      * Get the posts of this type.
      */
-    public function posts(): HasMany
+    public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsToMany(Post::class);
     }
 }

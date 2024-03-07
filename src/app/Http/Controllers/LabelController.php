@@ -38,9 +38,6 @@ class LabelController extends Controller
         $label = new Label;
         $label->name = $validated['new_label'];
         $label->save();
-        
-        $categories  = [1, 2];
-        $label->posts()->attach($categories);
 
         return redirect()->route('types.index');
     }

@@ -40,6 +40,7 @@ Route::get('/filter', function () {
         'types' => DB::table('types')->get(),
         'labels' => DB::table('labels')->get(),
         'label_post' => DB::table('label_post')->get(),
+        'post_type' => DB::table('post_type')->get(),
     ]);
 })->middleware(['auth', 'verified'])->name('filter');
 

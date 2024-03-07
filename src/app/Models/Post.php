@@ -19,7 +19,6 @@ class Post extends Model
         'title',
         'content',
         'filepath',
-        'type_id',
     ];
 
     /**
@@ -31,11 +30,11 @@ class Post extends Model
     }
 
     /**
-     * Get the type that the post belongs to.
+     * Get the types that the post belongs to.
      */
-    public function type(): BelongsTo
+    public function types()
     {
-        return $this->belongsTo(Type::class);
+        return $this->belongsToMany(Type::class);
     }
 
     /**

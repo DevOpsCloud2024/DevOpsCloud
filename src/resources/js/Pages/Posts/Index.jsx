@@ -12,7 +12,7 @@ export default function Index({ auth, posts, types, labels }) {
         title: '',
         content: '',
         file: '',
-        type_id: '',
+        type_ids: [],
         label_ids: [],
     });
 
@@ -32,8 +32,6 @@ export default function Index({ auth, posts, types, labels }) {
 
             <div>
                 {'testetstest' + data.label_ids}
-                {'       types:' + types +'_____   ' + options_types[0].value}
-                {'       labels:' + labels}
             </div>
 
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -51,7 +49,7 @@ export default function Index({ auth, posts, types, labels }) {
                         onChange={e => setData('content', e.target.value)}
                     ></textarea>
                     <Select
-                        // isMulti
+                        isMulti
                         placeholder="Type of document"
                         name="colors"
                         options={options_types}
@@ -59,7 +57,7 @@ export default function Index({ auth, posts, types, labels }) {
                         classNamePrefix="select"
                         isSearchable="true"
                         isClearable="true"
-                        onChange={chosen => setData('type_id', chosen.value)}
+                        onChange={chosen => setData('type_ids', chosen.map(c => c.value))}
                     />
                     <Select
                         isMulti

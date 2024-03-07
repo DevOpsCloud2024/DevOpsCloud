@@ -42,7 +42,6 @@ class PostController extends Controller
             'title' => 'required|string|max:64',
             'content' => 'required|string|max:255',
             'file' => 'required|file:pdf',
-            'type_id' => 'required|int',
         ]);
 
         $validated['filepath'] = $validated['file']->store('public');
@@ -52,6 +51,7 @@ class PostController extends Controller
 
         $post = $request->user()->posts()->create($validated);
         $post->labels()->attach($request->label_ids);
+        $post->types()->attach($request->type_ids);
 
         return redirect()->route('posts.index');
     }
