@@ -36,6 +36,7 @@ jobs:
           commit_message: "🔨 Fix linting issues"
           skip_fetch: true
   eslint:
+    needs: [phplint]
     runs-on: ubuntu-latest
 
     permissions:
@@ -74,7 +75,7 @@ jobs:
           skip_fetch: true
 
   run-tests:
-    needs: [phplint, eslint]
+    needs: [eslint]
     runs-on: ubuntu-latest
     defaults:
       run:
