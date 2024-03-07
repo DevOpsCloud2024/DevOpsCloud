@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,13 +31,16 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
 Route::resource('courses', CourseController::class)
     ->only(['index', 'store', 'update', 'destroy', 'enroll'])
+    ->middleware(['auth', 'verified']);
+
+Route::post('rate/{post}/{rating}', [PostController::class, 'rate'])
+    ->name('post.rate')
     ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
