@@ -41,11 +41,6 @@ export default function Filter({ auth, posts, types, labels, label_post, post_ty
         >
             <Head title="Filter" />
 
-            <div>
-                {chosen_labels_ids}
-                {chosen_types_ids}
-            </div>
-
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <Select
                     isMulti
