@@ -15,8 +15,16 @@ class CourseController extends Controller
      */
     public function index(): Response
     {
+        if (auth()->user()->is_admin) {
+            return Inertia::render('Courses/IndexAdmin', [
+                'courses' => Course::get(),
+            ]);
+        }
+
         return Inertia::render('Courses/Index', [
-            'courses' => Course::get()
+            'courses' => Course::get(),
+            'user' => auth()->user(),
+            'userCourses' => auth()->user()->courses,
         ]);
     }
 
@@ -36,8 +44,6 @@ class CourseController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:128',
         ]);
-
-        // $request->user()->courses()->create($validated);
 
         // Create a new course instance
         $course = new Course();
@@ -70,9 +76,21 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request, Course $course): RedirectResponse
     {
-        //
+        $user = $request->user();
+        $enrolled = $request->user()->courses->contains($course->id);
+        if ($enrolled) {
+            // Remove the enrollment of the authenticated user in the specified course
+            $user->courses()->detach($course->id);
+        } else {
+            // Enroll the authenticated user in the specified course
+            $user->courses()->attach($course->id);
+        }
+
+        // $course->update($course);
+
+        return redirect(route('courses.index'));
     }
 
     /**
@@ -82,4 +100,21 @@ class CourseController extends Controller
     {
         //
     }
+
+    // /**
+    //  * Enroll a student to a course.
+    //  */
+    // public function enroll(Request $request, Course $course, bool $enroll): RedirectResponse
+    // {
+    //     $user = $request->user();
+    //     if ($enroll) {
+    //         // Enroll the authenticated user in the specified course
+    //         $user->courses()->attach($course->id);
+    //         // return redirect()->route('courses.index')->with('Success', 'You have been enrolled in the course successfully.');
+    //     } else {
+    //         // Remove the enrollment of the authenticated user in the specified course
+    //         $user->courses()->detach($course->id);
+    //     }
+    //     return redirect(route('courses.index'));
+    // }
 }

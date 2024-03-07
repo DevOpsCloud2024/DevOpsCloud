@@ -37,7 +37,7 @@ Route::resource('posts', PostController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('courses', CourseController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
+    ->only(['index', 'store', 'update', 'destroy', 'enroll'])
     ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {

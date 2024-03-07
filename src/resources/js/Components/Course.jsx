@@ -1,14 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import PrimaryButton from '@/Components/PrimaryButton';
+import { useForm, usePage } from '@inertiajs/react';
  
-export default function Course({ course }) {
+export default function Course({ course, userCourses, admin }) {
+    const { auth } = usePage().props;
+    const { data, setData, patch, clearErrors, reset, errors } = useForm({
+        users: course.users
+    });
+    const [enrolledCourses, setEnrolledCourses] = useState(userCourses);
+
+    const submit = (e) => {
+        setEnrolledCourses((prevEnrolledCourses) =>
+                    prevEnrolledCourses.includes(course.id)
+                        ? prevEnrolledCourses.filter((id) => id !== course.id)
+                        : [...prevEnrolledCourses, course.id]);
+        e.preventDefault();
+        patch(route('courses.update', course.id));
+    };
+
+    const userEnrolled = () => {
+        return userCourses.some(userCourse => userCourse.id === course.id);
+    };
+
     return (
         <div className="p-6 flex space-x-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600 -scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <div className="flex-1">
-                <h1 className="mt-4 text-lg text-gray-900">{course.title}</h1>
-            </div>
+            <form onSubmit={submit}>
+                <div className="space-x-2">
+                    <h1 className="mt-4 text-lg text-gray-900">{course.title}</h1>
+                    {admin ? <></> : <PrimaryButton className="mt-4">{userEnrolled() ? 'Quit' : 'Enroll'}</PrimaryButton>}
+                </div>
+            </form>
         </div>
     );
 }
