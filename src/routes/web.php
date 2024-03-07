@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,7 +34,6 @@ Route::get('/dashboard', function () {
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
-
 
 Route::resource('courses', CourseController::class)
     ->only(['index', 'store', 'update', 'destroy', 'enroll'])
