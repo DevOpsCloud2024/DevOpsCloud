@@ -105,7 +105,7 @@ class PostController extends Controller
     {
         $post->rateOnce($rating, null, Auth::id());
 
-        // Send a warning notification to the admin if this post has received a lot of low ratings.
+        // Send warning notification to the admin if this post has received a lot of low ratings.
         if ($post->averageRating() < $this::WARNING_THRESHOLD_RATING && $post->timesRated() >= $this::WARNING_THRESHOLD_NUMBER) {
             sendWarningNotification($post->title);
         }
