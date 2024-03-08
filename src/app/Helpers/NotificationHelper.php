@@ -6,13 +6,13 @@ use Aws\Sns\SnsClient;
 /**
  * Send a warning notification to the admin.
  *
- * @param  mixed $title title of the document
- * @return void
+ * @param  mixed  $title  title of the document
  */
-function sendWarningNotification(string $title) : void {
+function sendWarningNotification(string $title): void
+{
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
     ]);
 
     $message = "The document \"$title\" is receiving low ratings. Please consider taking action.";

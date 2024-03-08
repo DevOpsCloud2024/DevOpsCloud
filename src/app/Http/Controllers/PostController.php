@@ -13,8 +13,9 @@ class PostController extends Controller
 {
     /** If the rating falls below this treshold, the admin receives a warning. */
     const WARNING_THRESHOLD_RATING = 2.0;
+
     /** Minimum number of ratings needed before a warning is send. */
-    CONST WARNING_THRESHOLD_NUMBER = 1;
+    const WARNING_THRESHOLD_NUMBER = 1;
 
     /**
      * Display a listing of the resource.
@@ -105,10 +106,10 @@ class PostController extends Controller
         $post->rateOnce($rating, null, Auth::id());
 
         // Send a warning notification to the admin if this post has received a lot of low ratings.
-        if ($post->averageRating() < $this::WARNING_THRESHOLD_RATING && $post->timesRated() >= $this::WARNING_THRESHOLD_NUMBER){
+        if ($post->averageRating() < $this::WARNING_THRESHOLD_RATING && $post->timesRated() >= $this::WARNING_THRESHOLD_NUMBER) {
             sendWarningNotification($post->title);
         }
-        
+
         return redirect()->back();
-    }   
+    }
 }
