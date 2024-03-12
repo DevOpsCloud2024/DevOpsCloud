@@ -36,7 +36,7 @@ Route::get('/dashboard', function () {
 
 Route::get('/filter', function () {
     return Inertia::render('Filter', [
-        'posts' => Post::with('user:id,name')->latest()->get(),
+        'filtered_posts' => [],
         'types' => DB::table('types')->get(),
         'labels' => DB::table('labels')->get(),
         'label_post' => DB::table('label_post')->get(),
@@ -53,6 +53,30 @@ Route::resource('types', TypeController::class)
 Route::resource('labels', LabelController::class)
 ->only(['store'])
 ->middleware(['auth', 'verified']);
+
+// Route::resource('filter/{types}/{labels}', [PostController::class, 'filter'])
+//     ->name('posts.filter')
+//     ->middleware(['auth', 'verified']);
+
+// Route::get('/filter/{test}', function (string $test) {
+//     return $test;
+//     // return DB::table('posts')
+//     //             ->whereIn('id', [1, 2, 3])
+//     //             ->get();
+// } )
+//     ->name('posts.filter')
+//     ->middleware(['auth', 'verified']);
+
+
+
+// Route::get('/filter/{name?}', function (?string $name = 'kees') {
+//     return Inertia::render('Filter');
+// })->middleware(['auth', 'verified'])->name('filter');
+
+Route::get('filtering', [PostController::class, 'filtering'])
+    ->name('post.filtering')
+    ->middleware(['auth', 'verified']);
+
 
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])

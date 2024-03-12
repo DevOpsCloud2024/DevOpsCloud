@@ -25,6 +25,7 @@
         "@inertiajs/progress": "^0.2.7",
         "dayjs": "^1.11.10",
         "jsconfig.json": "^2.3.3",
+        "react-button": "^1.2.1",
         "react-select": "^5.8.0"
     }
 }
