@@ -38,7 +38,6 @@ class Post extends Model
     }
 
     /**
-
      * Get the types that the post belongs to.
      */
     public function types()

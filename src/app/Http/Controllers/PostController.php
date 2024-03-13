@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\Type;
-use App\Models\Label;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr;
 
 class PostController extends Controller
 {
@@ -96,11 +94,11 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
-      
+
         DB::table('post_type')
             ->where('post_id', $post->id)
             ->delete();
-    
+
         DB::table('label_post')
             ->where('post_id', $post->id)
             ->delete();
@@ -126,7 +124,7 @@ class PostController extends Controller
                     ->select('post_type.post_id')
                     ->whereIn('post_type.type_id', $request->type_ids)
                     ->get();
-            
+
             } else {
                 $wanted_posts = DB::table('post_type')
                     ->join('label_post', 'label_post.post_id', '=', 'post_type.post_id')
@@ -143,7 +141,6 @@ class PostController extends Controller
 
         $filtered_posts = $all_posts->whereIn('id', $new_arr)->get();
 
-
         return Inertia::render('Filter', [
             'filtered_posts' => $filtered_posts,
             'types' => DB::table('types')->get(),
@@ -152,8 +149,6 @@ class PostController extends Controller
             'post_type' => DB::table('post_type')->get(),
         ]);
     }
-
-        
 
     /**
      * Rate a post.
