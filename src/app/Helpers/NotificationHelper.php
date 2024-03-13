@@ -23,7 +23,7 @@ function sendWarningNotification(string $title): void
 }
 
 /**
- * Sends Mailhog email.
+ * Sends Mailhog email for local testing.
  *
  * @param  string  $title  title of document
  */
