@@ -1,10 +1,10 @@
 <?php
 
+use App\Mail\NotificationMail;
 use Aws\Exception\AwsException;
 use Aws\Sns\SnsClient;
-use App\Mail\NotificationMail;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Send a warning notification to the admin.
@@ -13,20 +13,19 @@ use Illuminate\Support\Facades\App;
  */
 function sendWarningNotification(string $title): void
 {
-    if (App::environment(['local'])){
+    if (App::environment(['local'])) {
         // In local environment, send mail with Mailhog.
         sendLocalMail($title);
     } else {
         // In production environment, send SNS notification.
         sendNotification($title);
-    }    
+    }
 }
 
 /**
  * Sends Mailhog email.
  *
- * @param  string $title title of document
- * @return void
+ * @param  string  $title  title of document
  */
 function sendLocalMail(string $title): void
 {
@@ -36,8 +35,7 @@ function sendLocalMail(string $title): void
 /**
  * Sends SNS notification.
  *
- * @param  string $title title of document
- * @return void
+ * @param  string  $title  title of document
  */
 function sendNotification(string $title): void
 {
