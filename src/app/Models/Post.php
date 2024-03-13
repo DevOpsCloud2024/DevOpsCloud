@@ -38,12 +38,28 @@ class Post extends Model
     }
 
     /**
-     * This function is necessary for the ratings.
+     * Get the types that the post belongs to.
+     */
+    public function types()
+    {
+        return $this->belongsToMany(Type::class);
+    }
+
+    /**
+     * The labels that belong to the post.
+     */
+    public function labels()
+    {
+        return $this->belongsToMany(Label::class);
+    }
+
+    /** This function is necessary for the ratings.
      * It is missing from the ratings package for unknown reasons,
      * so we include it here.
      */
     public function getTimesRatedAttribute()
     {
         return $this->timesRated();
+
     }
 }

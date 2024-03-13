@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +32,28 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/filter', function () {
+    return Inertia::render('Filter', [
+        'filtered_posts' => [],
+        'types' => DB::table('types')->get(),
+        'labels' => DB::table('labels')->get(),
+        'label_post' => DB::table('label_post')->get(),
+        'post_type' => DB::table('post_type')->get(),
+    ]);
+})->middleware(['auth', 'verified'])->name('filter');
+
+Route::resource('types', TypeController::class)
+    ->only(['index', 'store'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('labels', LabelController::class)
+    ->only(['store'])
+    ->middleware(['auth', 'verified']);
+
+Route::get('filtering', [PostController::class, 'filtering'])
+    ->name('post.filtering')
+    ->middleware(['auth', 'verified']);
 
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])

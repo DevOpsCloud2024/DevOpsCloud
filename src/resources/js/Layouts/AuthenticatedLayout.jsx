@@ -33,6 +33,21 @@ export default function Authenticated({ user, header, children }) {
                                 >
                                     Posts
                                 </NavLink>
+
+                                <NavLink
+                                      href={route('filter')}
+                                      active={route().current('filter')}
+                                >
+                                      Filter
+                                </NavLink>
+
+                                <NavLink 
+                                    href={route('types.index')}
+                                    active={route().current('types.index')}
+                                >
+                                    Types
+                                </NavLink>
+
                                 <NavLink
                                     href={route("courses.index")}
                                     active={route().current("courses.index")}
@@ -136,6 +151,19 @@ export default function Authenticated({ user, header, children }) {
                         >
                             Posts
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            href={route('filter')}
+                            active={route().current('filter')}
+                        >
+                            Filter
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            href={route('types.index')}
+                            active={route().current('types.index')}
+                        >
+                            Types
+                        </ResponsiveNavLink>
+                        
                         <ResponsiveNavLink
                             href={route("courses.index")}
                             active={route().current("courses.index")}
