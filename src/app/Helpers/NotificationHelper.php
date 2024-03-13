@@ -2,6 +2,9 @@
 
 use Aws\Exception\AwsException;
 use Aws\Sns\SnsClient;
+use App\Mail\NotificationMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\App;
 
 /**
  * Send a warning notification to the admin.
@@ -9,6 +12,34 @@ use Aws\Sns\SnsClient;
  * @param  mixed  $title  title of the document
  */
 function sendWarningNotification(string $title): void
+{
+    if (App::environment(['local'])){
+        // In local environment, send mail with Mailhog.
+        sendLocalMail($title);
+    } else {
+        // In production environment, send SNS notification.
+        sendNotification($title);
+    }    
+}
+
+/**
+ * Sends Mailhog email.
+ *
+ * @param  string $title title of document
+ * @return void
+ */
+function sendLocalMail(string $title): void
+{
+    Mail::to('test@mailhog.local')->send(new NotificationMail($title));
+}
+
+/**
+ * Sends SNS notification.
+ *
+ * @param  string $title title of document
+ * @return void
+ */
+function sendNotification(string $title): void
 {
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
