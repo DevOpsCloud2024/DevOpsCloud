@@ -1,0 +1,135 @@
+name: "CI/CD Pipeline"
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - "*"
+      - "*/*"
+      - "**"
+      - "!main"
+
+  pull_request:
+
+jobs:
+  phplint:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Laravel Pint
+        uses: aglipanci/laravel-pint-action@2.0.0
+        with:
+          preset: "laravel"
+          verboseMode: "true"
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔨 Fix linting issues"
+          skip_fetch: true
+  eslint:
+    needs: [phplint]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install -D
+
+      - name: Run Prettier
+        run: pnpm format:fix
+
+      - name: Remove node_modules
+        run: rm -rf node_modules
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔨 Fix linting issues"
+          commit_user_name: "GitHub Actions"
+          skip_fetch: true
+
+  run-tests:
+    needs: [eslint]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Install dependencies
+        run: composer install --no-ansi --prefer-dist
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: "Configure .env"
+        run: cp .env.ci .env
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build assets
+        run: pnpm run build
+
+      - name: Run migrations
+        run: php artisan migrate:fresh --seed --force
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run tests
+        run: ./vendor/bin/pest
+
+      - name: Setup Composer cache
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir) >> $GITHUB_OUTPUT"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-

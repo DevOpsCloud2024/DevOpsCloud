@@ -7,6 +7,7 @@ use App\Models\Type;
 use App\Models\Label;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,7 @@ class PostController extends Controller
         $validated['filepath'] = $validated['file']->store('public');
         // Remove the 'public/' prefix from the file path
         $validated['filepath'] = substr($validated['filepath'], 7);
-        $validated['filepath'] = asset('storage/' . $validated['filepath']);
+        $validated['filepath'] = asset('storage/'.$validated['filepath']);
 
         $post = $request->user()->posts()->create($validated);
         $post->labels()->attach($request->label_ids);
@@ -84,6 +85,7 @@ class PostController extends Controller
         ]);
 
         $post->update($validated);
+
         return redirect(route('posts.index'));
     }
 
@@ -94,7 +96,7 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
-
+      
         DB::table('post_type')
             ->where('post_id', $post->id)
             ->delete();
@@ -149,5 +151,17 @@ class PostController extends Controller
             'label_post' => DB::table('label_post')->get(),
             'post_type' => DB::table('post_type')->get(),
         ]);
+    }
+
+        
+
+    /**
+     * Rate a post.
+     */
+    public function rate(Post $post, int $rating)
+    {
+        $post->rateOnce($rating, null, Auth::id());
+
+        return redirect()->back();
     }
 }
