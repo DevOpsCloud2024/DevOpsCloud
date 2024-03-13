@@ -52,8 +52,9 @@ class Post extends Model
     public function labels()
     {
         return $this->belongsToMany(Label::class);
+    }
 
-     * This function is necessary for the ratings.
+    /** This function is necessary for the ratings.
      * It is missing from the ratings package for unknown reasons,
      * so we include it here.
      */

@@ -12,11 +12,11 @@ export default function Index({ auth }) {
             <Head title="New types" />
 
 
-            <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+            <div>
                 <AddType/>
             </div>
 
-            <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+            <div>
                 <AddLabel/>
             </div>
             
