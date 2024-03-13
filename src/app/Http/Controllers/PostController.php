@@ -118,7 +118,6 @@ class PostController extends Controller
                 ->whereIn('label_post.label_id', $request->label_ids)
                 ->get();
 
-            dump($wanted_posts);
         } else {
             if ($request->label_ids === null) {
                 $wanted_posts = DB::table('post_type')
@@ -139,8 +138,6 @@ class PostController extends Controller
         $new_arr = Arr::pluck($wanted_posts, 'post_id');
 
         $all_posts = Post::with('user:id,name', 'labels:name', 'types:name')->latest();
-        // $test2 = $test->whereIn('id', [26, 27])->get();
-        // dump($test2);
 
         $filtered_posts = $all_posts->whereIn('id', $new_arr)->get();
 

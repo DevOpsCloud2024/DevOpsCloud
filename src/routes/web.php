@@ -54,24 +54,6 @@ Route::resource('labels', LabelController::class)
 ->only(['store'])
 ->middleware(['auth', 'verified']);
 
-// Route::resource('filter/{types}/{labels}', [PostController::class, 'filter'])
-//     ->name('posts.filter')
-//     ->middleware(['auth', 'verified']);
-
-// Route::get('/filter/{test}', function (string $test) {
-//     return $test;
-//     // return DB::table('posts')
-//     //             ->whereIn('id', [1, 2, 3])
-//     //             ->get();
-// } )
-//     ->name('posts.filter')
-//     ->middleware(['auth', 'verified']);
-
-
-
-// Route::get('/filter/{name?}', function (?string $name = 'kees') {
-//     return Inertia::render('Filter');
-// })->middleware(['auth', 'verified'])->name('filter');
 
 Route::get('filtering', [PostController::class, 'filtering'])
     ->name('post.filtering')
