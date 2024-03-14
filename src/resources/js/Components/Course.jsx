@@ -83,7 +83,12 @@ export default function Course({ course, userCourses, admin }) {
             ) : (
                 <div className="space-x-2">
                     <h1 className="mt-4 text-lg text-gray-900">{course.title}</h1>
-                    <Dropdown.Link as="button" className="mt-4 btn btn-blue" href={route("course.enroll", {course: course.id})} method="post">
+                    <Dropdown.Link
+                        as="button"
+                        className="mt-4 btn btn-blue"
+                        href={route("course.enroll", { course: course.id })}
+                        method="post"
+                    >
                         {userEnrolled() ? "Quit" : "Enroll"}
                     </Dropdown.Link>
                 </div>
