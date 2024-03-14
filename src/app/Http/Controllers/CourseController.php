@@ -41,6 +41,7 @@ class CourseController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // $this->authorize('create');
         $validated = $request->validate([
             'title' => 'required|string|max:128',
         ]);
@@ -78,8 +79,23 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course): RedirectResponse
     {
-        $user = $request->user();
-        $enrolled = $request->user()->courses->contains($course->id);
+        $this->authorize('update', $course);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $course->update($validated);
+
+        return redirect(route('courses.index'));
+    }
+
+    /**
+     * Enroll user out or in to course.
+     */
+    public function enroll(Course $course): RedirectResponse
+    {
+        $user = auth()->user();
+        $enrolled = $user->courses->contains($course->id);
         if ($enrolled) {
             // Remove the enrollment of the authenticated user in the specified course
             $user->courses()->detach($course->id);
@@ -87,8 +103,6 @@ class CourseController extends Controller
             // Enroll the authenticated user in the specified course
             $user->courses()->attach($course->id);
         }
-
-        // $course->update($course);
 
         return redirect(route('courses.index'));
     }
@@ -98,6 +112,9 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
+        $this->authorize('delete', $course);
+        $course->delete();
+
+        return redirect(route('courses.index'));
     }
 }

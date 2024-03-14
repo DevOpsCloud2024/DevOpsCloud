@@ -36,7 +36,11 @@ Route::resource('posts', PostController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('courses', CourseController::class)
-    ->only(['index', 'store', 'update', 'destroy', 'enroll'])
+    ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::post('enroll/{course}', [CourseController::class, 'enroll'])
+    ->name('course.enroll')
     ->middleware(['auth', 'verified']);
 
 Route::post('rate/{post}/{rating}', [PostController::class, 'rate'])
