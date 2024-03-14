@@ -53,7 +53,7 @@ class CourseController extends Controller
 
         // Create an SNS topic
         $result = createTopic($course->title);
-        if ($result !== false){
+        if ($result !== false) {
             $course->sns_topic = $result;
         }
 
@@ -99,7 +99,7 @@ class CourseController extends Controller
             $subscription = subscribeToTopic($user->email, $course->sns_topic);
 
             // Enroll the authenticated user in the specified course
-            if ($subscription !== false){
+            if ($subscription !== false) {
                 confirmSubscription($subscription, $course->sns_topic);
                 $user->courses()->attach($course->id, ['sns_subscription' => $subscription]);
             } else {

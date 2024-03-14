@@ -35,7 +35,7 @@ function sendLocalMail(string $title): void
 /**
  * Sends SNS notification.
  *
- * @param  mixed $title title of document
+ * @param  mixed  $title  title of document
  * @return bool whether it succeeded or not
  */
 function sendNotification(string $title): bool
@@ -53,9 +53,11 @@ function sendNotification(string $title): bool
             'Message' => $message,
             'TopicArn' => $topic,
         ]);
+
         return true;
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
     }
 }
@@ -63,23 +65,25 @@ function sendNotification(string $title): bool
 /**
  * Creates a new SNS topic for a course.
  *
- * @param  string $course course name
- * @return string ARN of new topic, or false if it failed 
+ * @param  string  $course  course name
+ * @return string ARN of new topic, or false if it failed
  */
 function createTopic(string $course): string|false
 {
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
     ]);
-    
+
     try {
         $result = $SnSclient->createTopic([
             'Name' => $course,
         ]);
+
         return $result->get('TopicArn');
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
     }
 }
@@ -87,41 +91,43 @@ function createTopic(string $course): string|false
 /**
  * Deletes a topic.
  *
- * @param  string $topic ARN of topic
+ * @param  string  $topic  ARN of topic
  * @return bool whether it succeeded or not
  */
 function deleteTopic(string $topic): bool
 {
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
     ]);
-    
+
     try {
         $result = $SnSclient->deleteTopic([
             'TopicArn' => $topic,
         ]);
+
         return true;
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
-    }        
+    }
 }
 
 /**
  * Subscribe a user to an SNS topic.
  *
- * @param  string $email email of user
- * @param  string $topic SNS topic
+ * @param  string  $email  email of user
+ * @param  string  $topic  SNS topic
  * @return string ARN of new subscription, or false if it failed
  */
 function subscribeToTopic(string $email, string $topic): string|false
 {
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
     ]);
-    
+
     try {
         $result = $SnSclient->subscribe([
             'Protocol' => 'email',
@@ -129,9 +135,11 @@ function subscribeToTopic(string $email, string $topic): string|false
             'ReturnSubscriptionArn' => true,
             'TopicArn' => $topic,
         ]);
+
         return $result->get('SubscriptionArn');
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
     }
 }
@@ -139,25 +147,27 @@ function subscribeToTopic(string $email, string $topic): string|false
 /**
  * Confirms subscription to an SNS topic.
  *
- * @param  string $subscription subscription ARN
- * @param  string $topic topic ARN
+ * @param  string  $subscription  subscription ARN
+ * @param  string  $topic  topic ARN
  * @return bool whether it succeeded or not
  */
 function confirmSubscription(string $subscription, string $topic): bool
 {
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
     ]);
-    
+
     try {
         $result = $SnSclient->confirmSubscription([
             'Token' => $subscription,
             'TopicArn' => $topic,
         ]);
+
         return true;
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
     }
 }
@@ -165,23 +175,25 @@ function confirmSubscription(string $subscription, string $topic): bool
 /**
  * Delete subscription to an SNS topic.
  *
- * @param  string $subscription subscription ARN
+ * @param  string  $subscription  subscription ARN
  * @return bool whether it succeeded or not
  */
 function deleteSubscription(string $subscription): bool
 {
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
     ]);
 
     try {
         $result = $SnSclient->unsubscribe([
             'SubscriptionArn' => $subscription,
         ]);
+
         return true;
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
     }
 }
@@ -200,9 +212,11 @@ function sendCourseNotification(string $topic, string $course, string $title): b
             'Message' => $message,
             'TopicArn' => $topic,
         ]);
+
         return true;
     } catch (AwsException $e) {
         error_log($e->getMessage());
+
         return false;
     }
 }
