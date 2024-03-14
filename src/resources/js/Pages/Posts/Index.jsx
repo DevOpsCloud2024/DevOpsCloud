@@ -14,6 +14,7 @@ export default function Index({ auth, posts, types, labels }) {
         file: '',
         type_ids: [],
         label_ids: [],
+        course_id: 0,
     });
 
     const submit = e => {
@@ -65,6 +66,13 @@ export default function Index({ auth, posts, types, labels }) {
                         isSearchable="true"
                         isClearable="true"
                         onChange={chosen => setData('label_ids', chosen.map(c => c.value))}
+                    />
+                    <input
+                        type="number"
+                        id="course_id"
+                        name="course_id"
+                        value={data.course_id}
+                        onChange={e => setData("course_id", e.target.value)}
                     />
                     <input
                         type="file"

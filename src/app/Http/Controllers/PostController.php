@@ -48,6 +48,7 @@ class PostController extends Controller
             'title' => 'required|string|max:64',
             'content' => 'required|string|max:255',
             'file' => 'required|file:pdf',
+            'course_id' => 'required',
         ]);
 
         $validated['filepath'] = $validated['file']->store('public');

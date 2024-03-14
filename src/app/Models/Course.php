@@ -17,4 +17,12 @@ class Course extends Model
     {
         return $this->belongsToMany(User::class, 'courses_users', 'course_id', 'user_id');
     }
+
+    /**
+     * Get the posts belonging to a course.
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }
