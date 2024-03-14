@@ -10,7 +10,7 @@ export default function AverageRating({ post }) {
                 allowFraction={true}
                 SVGstyle={{ display: "inline" }} // To prevent stars from displaying vertically
             />
-            ({post.times_rated} reviews)
+            <p className="inline ml-2">({post.times_rated} review{post.times_rated == 1 ? "" : "s"})</p>
         </div>
     );
 }

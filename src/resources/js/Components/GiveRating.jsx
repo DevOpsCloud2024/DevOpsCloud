@@ -8,8 +8,8 @@ export default function Post({ post }) {
     };
 
     return (
-        <div>
-            Rate this document:
+        <div className="mt-4 border rounded px-3">
+            <p className="text-gray-700">Rate this document:</p>
             <Rating
                 onClick={handleRating}
                 initialValue={post.user_average_rating}
