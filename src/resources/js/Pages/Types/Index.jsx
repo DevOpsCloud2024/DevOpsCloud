@@ -1,25 +1,21 @@
-import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import AddType from './Partials/AddType';
-import AddLabel from './Partials/AddLabel';
+import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import AddType from "./Partials/AddType";
+import AddLabel from "./Partials/AddLabel";
 
 export default function Index({ auth }) {
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-        >
+        <AuthenticatedLayout user={auth.user}>
             <Head title="New types" />
 
-
             <div>
-                <AddType/>
+                <AddType />
             </div>
 
             <div>
-                <AddLabel/>
+                <AddLabel />
             </div>
-            
         </AuthenticatedLayout>
     );
 }
