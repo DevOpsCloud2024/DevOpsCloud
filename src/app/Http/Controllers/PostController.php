@@ -25,9 +25,10 @@ class PostController extends Controller
     public function index(): Response
     {
         return Inertia::render('Posts/Index', [
-            'posts' => Post::with('user:id,name', 'labels:name', 'types:name')->latest()->get(),
+            'posts' => Post::with('user:id,name', 'labels:name', 'types:name', 'course')->latest()->get(),
             'types' => DB::table('types')->get(),
             'labels' => DB::table('labels')->get(),
+            'courses' => DB::table('courses')->get(),
         ]);
     }
 

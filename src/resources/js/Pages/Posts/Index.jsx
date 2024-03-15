@@ -7,7 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, Head } from '@inertiajs/react';
 import Select from 'react-select';
 
-export default function Index({ auth, posts, types, labels }) {
+export default function Index({ auth, posts, types, labels, courses }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
         content: '',
@@ -26,6 +26,8 @@ export default function Index({ auth, posts, types, labels }) {
     types.map(t => options_types.push({value: t.id, label:t.name}))
     let options_labels = []
     labels.map(l => options_labels.push({value: l.id, label:l.name}))
+    let options_courses = []
+    courses.map(c => options_courses.push({value: c.id, label:c.title}))
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -67,12 +69,15 @@ export default function Index({ auth, posts, types, labels }) {
                         isClearable="true"
                         onChange={chosen => setData('label_ids', chosen.map(c => c.value))}
                     />
-                    <input
-                        type="number"
-                        id="course_id"
-                        name="course_id"
-                        value={data.course_id}
-                        onChange={e => setData("course_id", e.target.value)}
+                    <Select
+                        placeholder="Course"
+                        name="colors"
+                        options={options_courses}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen => setData('course_id', chosen.value)}
                     />
                     <input
                         type="file"
