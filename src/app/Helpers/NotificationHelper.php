@@ -68,6 +68,10 @@ function sendNotification(string $title): bool
  */
 function createTopic(string $course): string|false
 {
+    if (App::environment(['local'])) {
+        return false;
+    }
+
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
         'version' => '2010-03-31'
@@ -92,6 +96,10 @@ function createTopic(string $course): string|false
  */
 function deleteTopic(string $topic): bool
 {
+    if (App::environment(['local'])) {
+        return false;
+    }
+
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
         'version' => '2010-03-31'
@@ -117,6 +125,10 @@ function deleteTopic(string $topic): bool
  */
 function subscribeToTopic(string $email, string $topic): string|false
 {
+    if (App::environment(['local'])) {
+        return false;
+    }
+
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
         'version' => '2010-03-31'
@@ -145,6 +157,10 @@ function subscribeToTopic(string $email, string $topic): string|false
  */
 function confirmSubscription(string $subscription, string $topic): bool
 {
+    if (App::environment(['local'])) {
+        return false;
+    }
+
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
         'version' => '2010-03-31'
@@ -170,6 +186,10 @@ function confirmSubscription(string $subscription, string $topic): bool
  */
 function deleteSubscription(string $subscription): bool
 {
+    if (App::environment(['local'])) {
+        return false;
+    }
+
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
         'version' => '2010-03-31'
@@ -188,6 +208,10 @@ function deleteSubscription(string $subscription): bool
 
 function sendCourseNotification(string $topic, string $course, string $title): bool
 {
+    if (App::environment(['local'])) {
+        return false;
+    }
+
     $SnSclient = new SnsClient([
         'region' => 'us-east-1',
         'version' => '2010-03-31',
