@@ -62,7 +62,7 @@ class PostController extends Controller
         $post->labels()->attach($request->label_ids);
         $post->types()->attach($request->type_ids);
 
-        // Send notification to students enrolled in this course
+        // Send notification to students enrolled in course
         $course = Course::findOrFail($validated['course_id']);
         sendCourseNotification($course->sns_topic, $course->title, $validated['title']);
 
