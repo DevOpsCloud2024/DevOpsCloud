@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Course;
 
 class PostController extends Controller
 {
@@ -60,6 +61,10 @@ class PostController extends Controller
         $post = $request->user()->posts()->create($validated);
         $post->labels()->attach($request->label_ids);
         $post->types()->attach($request->type_ids);
+
+        // Send notification to students enrolled in this course
+        $course = Course::findOrFail($validated['course_id']);
+        sendCourseNotification($course->sns_topic, $course->title, $validated['title']);
 
         return redirect()->route('posts.index');
     }
