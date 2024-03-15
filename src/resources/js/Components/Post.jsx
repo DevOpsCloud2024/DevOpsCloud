@@ -53,15 +53,15 @@ export default function Post({ post }) {
                         {post.created_at !== post.updated_at && (
                             <small className="text-sm text-gray-600"> &middot; edited</small>
                         )}
-                        { post.course &&
+                        {post.course && (
                             <p className="text-lg text-green-900">Course: {post.course.title}</p>
-                        }
-                        { types.length !== 0 && 
+                        )}
+                        {types.length !== 0 && (
                             <p className="text-lg text-blue-900">Types: {types.join(", ")}</p>
-                        }
-                        { labels.length !== 0 && 
+                        )}
+                        {labels.length !== 0 && (
                             <p className="text-lg text-green-900">Labels: {labels.join(", ")}</p>
-                        }
+                        )}
                         <AverageRating post={post} />
                         {/* <small className="ml-2 text-sm text-gray-600">
                             {dayjs(post.created_at).fromNow()}
