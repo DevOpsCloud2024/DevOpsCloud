@@ -1,19 +1,19 @@
+import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import Post from "@/Components/Post";
+import InputError from "@/Components/InputError";
+import PrimaryButton from "@/Components/PrimaryButton";
+import { useForm, Head } from "@inertiajs/react";
+import Select from "react-select";
 
-import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Post from '@/Components/Post';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import { useForm, Head } from '@inertiajs/react';
-import Select from 'react-select';
-
-export default function Index({ auth, posts, types, labels }) {
+export default function Index({ auth, posts, types, labels, courses }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        title: '',
-        content: '',
-        file: '',
+        title: "",
+        content: "",
+        file: "",
         type_ids: [],
         label_ids: [],
+        course_id: 0,
     });
 
     const submit = e => {
@@ -21,10 +21,12 @@ export default function Index({ auth, posts, types, labels }) {
         post(route("posts.store"), { onSuccess: () => reset() });
     };
 
-    let options_types = []
-    types.map(t => options_types.push({value: t.id, label:t.name}))
-    let options_labels = []
-    labels.map(l => options_labels.push({value: l.id, label:l.name}))
+    let options_types = [];
+    types.map(t => options_types.push({ value: t.id, label: t.name }));
+    let options_labels = [];
+    labels.map(l => options_labels.push({ value: l.id, label: l.name }));
+    let options_courses = [];
+    courses.map(c => options_courses.push({ value: c.id, label: c.title }));
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -53,7 +55,12 @@ export default function Index({ auth, posts, types, labels }) {
                         classNamePrefix="select"
                         isSearchable="true"
                         isClearable="true"
-                        onChange={chosen => setData('type_ids', chosen.map(c => c.value))}
+                        onChange={chosen =>
+                            setData(
+                                "type_ids",
+                                chosen.map(c => c.value)
+                            )
+                        }
                     />
                     <Select
                         isMulti
@@ -64,7 +71,22 @@ export default function Index({ auth, posts, types, labels }) {
                         classNamePrefix="select"
                         isSearchable="true"
                         isClearable="true"
-                        onChange={chosen => setData('label_ids', chosen.map(c => c.value))}
+                        onChange={chosen =>
+                            setData(
+                                "label_ids",
+                                chosen.map(c => c.value)
+                            )
+                        }
+                    />
+                    <Select
+                        placeholder="Course"
+                        name="colors"
+                        options={options_courses}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen => setData("course_id", chosen.value)}
                     />
                     <input
                         type="file"
@@ -86,7 +108,6 @@ export default function Index({ auth, posts, types, labels }) {
                     {posts.map(post => (
                         <Post key={post.id} post={post} />
                     ))}
-
                 </div>
             </div>
         </AuthenticatedLayout>

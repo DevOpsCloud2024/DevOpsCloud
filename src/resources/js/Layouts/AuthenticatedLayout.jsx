@@ -34,16 +34,13 @@ export default function Authenticated({ user, header, children }) {
                                     Posts
                                 </NavLink>
 
-                                <NavLink
-                                      href={route('filter')}
-                                      active={route().current('filter')}
-                                >
-                                      Filter
+                                <NavLink href={route("filter")} active={route().current("filter")}>
+                                    Filter
                                 </NavLink>
 
-                                <NavLink 
-                                    href={route('types.index')}
-                                    active={route().current('types.index')}
+                                <NavLink
+                                    href={route("types.index")}
+                                    active={route().current("types.index")}
                                 >
                                     Types
                                 </NavLink>
@@ -151,19 +148,19 @@ export default function Authenticated({ user, header, children }) {
                         >
                             Posts
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink 
-                            href={route('filter')}
-                            active={route().current('filter')}
+                        <ResponsiveNavLink
+                            href={route("filter")}
+                            active={route().current("filter")}
                         >
                             Filter
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink 
-                            href={route('types.index')}
-                            active={route().current('types.index')}
+                        <ResponsiveNavLink
+                            href={route("types.index")}
+                            active={route().current("types.index")}
                         >
                             Types
                         </ResponsiveNavLink>
-                        
+
                         <ResponsiveNavLink
                             href={route("courses.index")}
                             active={route().current("courses.index")}

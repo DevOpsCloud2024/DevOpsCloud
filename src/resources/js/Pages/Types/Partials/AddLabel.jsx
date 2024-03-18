@@ -1,24 +1,21 @@
-import React from 'react';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import { useForm, Head } from '@inertiajs/react';
-
+import React from "react";
+import InputError from "@/Components/InputError";
+import PrimaryButton from "@/Components/PrimaryButton";
+import { useForm, Head } from "@inertiajs/react";
 
 export default function AddLabel() {
-
     const { data, setData, post, processing, errors, reset } = useForm({
-        new_label: '',
+        new_label: "",
     });
 
-    const submit = (e) => {
+    const submit = e => {
         e.preventDefault();
-        post(route('labels.store'), { onSuccess: () => reset() });
+        post(route("labels.store"), { onSuccess: () => reset() });
     };
 
     return (
         <section>
             <Head title="New labels" />
-
 
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
                 <form onSubmit={submit}>
@@ -26,14 +23,15 @@ export default function AddLabel() {
                         value={data.new_label}
                         placeholder="New label for documents"
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
-                        onChange={e => setData('new_label', e.target.value)}
+                        onChange={e => setData("new_label", e.target.value)}
                     />
 
                     <InputError message={errors.content} className="mt-2" />
-                    <PrimaryButton className="mt-4" disabled={processing}>Add label</PrimaryButton>
+                    <PrimaryButton className="mt-4" disabled={processing}>
+                        Add label
+                    </PrimaryButton>
                 </form>
             </div>
-            
         </section>
     );
 }

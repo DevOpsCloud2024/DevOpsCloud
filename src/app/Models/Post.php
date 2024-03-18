@@ -20,6 +20,7 @@ class Post extends Model
         'title',
         'content',
         'filepath',
+        'course_id',
     ];
 
     /**
@@ -51,6 +52,14 @@ class Post extends Model
     public function labels()
     {
         return $this->belongsToMany(Label::class);
+    }
+
+    /**
+     * The course that a post belongs to.
+     */
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 
     /** This function is necessary for the ratings.

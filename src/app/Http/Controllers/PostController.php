@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,9 +26,10 @@ class PostController extends Controller
     public function index(): Response
     {
         return Inertia::render('Posts/Index', [
-            'posts' => Post::with('user:id,name', 'labels:name', 'types:name')->latest()->get(),
+            'posts' => Post::with('user:id,name', 'labels:name', 'types:name', 'course')->latest()->get(),
             'types' => DB::table('types')->get(),
             'labels' => DB::table('labels')->get(),
+            'courses' => DB::table('courses')->get(),
         ]);
     }
 
@@ -48,6 +50,7 @@ class PostController extends Controller
             'title' => 'required|string|max:64',
             'content' => 'required|string|max:255',
             'file' => 'required|file:pdf',
+            'course_id' => 'required',
         ]);
 
         $validated['filepath'] = $validated['file']->store('public');
@@ -58,6 +61,10 @@ class PostController extends Controller
         $post = $request->user()->posts()->create($validated);
         $post->labels()->attach($request->label_ids);
         $post->types()->attach($request->type_ids);
+
+        // Send notification to students enrolled in course
+        $course = Course::findOrFail($validated['course_id']);
+        sendCourseNotification($course->sns_topic, $course->title, $validated['title']);
 
         return redirect()->route('posts.index');
     }
