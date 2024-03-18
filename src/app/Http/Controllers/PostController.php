@@ -121,37 +121,27 @@ class PostController extends Controller
 
     public function filtering(Request $request)
     {
-        if ($request->type_ids === null) {
-            if ($request->label_ids === null) {
-                return redirect(route('filter'));
-            }
+        $types = $request->type_ids;
+        $labels =$request->label_ids;
+        $courses = $request->course_ids;
 
-            $wanted_posts = DB::table('label_post')
-                ->select('label_post.post_id')
-                ->whereIn('label_post.label_id', $request->label_ids)
-                ->get();
+        $wanted_posts = DB::table('posts')
+            ->join('label_post', 'posts.id', '=', 'label_post.post_id')
+            ->join('post_type', 'posts.id', '=', 'post_type.post_id')
+            ->select('posts.id')
+            ->when($types !== null, function ($query) use ($types) {
+                $query->whereIn('post_type.type_id', $types);
+            })
+            ->when($labels !== null, function ($query) use ($labels) {
+                $query->whereIn('label_post.label_id', $labels);
+            })
+            ->when($courses !== null, function ($query) use ($courses) {
+                $query->whereIn('posts.course_id', $courses);
+            })
+            ->get();
 
-        } else {
-            if ($request->label_ids === null) {
-                $wanted_posts = DB::table('post_type')
-                    ->select('post_type.post_id')
-                    ->whereIn('post_type.type_id', $request->type_ids)
-                    ->get();
-
-            } else {
-                $wanted_posts = DB::table('post_type')
-                    ->join('label_post', 'label_post.post_id', '=', 'post_type.post_id')
-                    ->select('post_type.post_id')
-                    ->whereIn('post_type.type_id', $request->type_ids)
-                    ->whereIn('label_post.label_id', $request->label_ids)
-                    ->get();
-            }
-        }
-
-        $new_arr = Arr::pluck($wanted_posts, 'post_id');
-
-        $all_posts = Post::with('user:id,name', 'labels:name', 'types:name')->latest();
-
+        $new_arr = Arr::pluck($wanted_posts, 'id');
+        $all_posts = Post::with('user:id,name', 'labels:name', 'types:name', 'course')->latest();
         $filtered_posts = $all_posts->whereIn('id', $new_arr)->get();
 
         return Inertia::render('Filter', [
