@@ -95,12 +95,12 @@ function createTopic(string $course): string|false
 /**
  * Deletes a topic.
  *
- * @param  string  $topic  ARN of topic
+ * @param  ?string  $topic  ARN of topic
  * @return bool whether it succeeded or not
  */
-function deleteTopic(string $topic): bool
+function deleteTopic(?string $topic): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || !isset($topic)) {
         return false;
     }
 
@@ -126,12 +126,12 @@ function deleteTopic(string $topic): bool
  * Subscribe a user to an SNS topic.
  *
  * @param  string  $email  email of user
- * @param  string  $topic  SNS topic
+ * @param  ?string  $topic  SNS topic
  * @return string ARN of new subscription, or false if it failed
  */
-function subscribeToTopic(string $email, string $topic): string|false
+function subscribeToTopic(string $email, ?string $topic): string|false
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || !isset($topic)) {
         return false;
     }
 
@@ -159,13 +159,13 @@ function subscribeToTopic(string $email, string $topic): string|false
 /**
  * Confirms subscription to an SNS topic.
  *
- * @param  string  $subscription  subscription ARN
- * @param  string  $topic  topic ARN
+ * @param  ?string  $subscription  subscription ARN
+ * @param  ?string  $topic  topic ARN
  * @return bool whether it succeeded or not
  */
-function confirmSubscription(string $subscription, string $topic): bool
+function confirmSubscription(?string $subscription, ?string $topic): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || !isset($subscription, $topic)) {
         return false;
     }
 
@@ -191,12 +191,12 @@ function confirmSubscription(string $subscription, string $topic): bool
 /**
  * Delete subscription to an SNS topic.
  *
- * @param  string  $subscription  subscription ARN
+ * @param  ?string  $subscription  subscription ARN
  * @return bool whether it succeeded or not
  */
-function deleteSubscription(string $subscription): bool
+function deleteSubscription(?string $subscription): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || !isset($subscription)) {
         return false;
     }
 
@@ -218,9 +218,17 @@ function deleteSubscription(string $subscription): bool
     }
 }
 
-function sendCourseNotification(string $topic, string $course, string $title): bool
+/**
+ * Sends a notification to subscribers when a new document is uploaded.
+ *
+ * @param  ?string $topic topic ARN
+ * @param  string $course course name
+ * @param  string $title title of document
+ * @return bool whether it succeeded or not
+ */
+function sendCourseNotification(?string $topic, string $course, string $title): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || !isset($topic)) {
         return false;
     }
 
