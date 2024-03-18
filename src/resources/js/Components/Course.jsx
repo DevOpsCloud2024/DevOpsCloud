@@ -25,7 +25,33 @@ export default function Course({ course, userCourses, admin }) {
             {admin ? (
                 <div className="w-full">
                     <div className="mt-1 space-x-2 flex justify-between w-full">
-                        <h1 className="text-lg text-gray-900">{course.title}</h1>
+                        {editing ? (
+                            <form onSubmit={submit}>
+                                <input
+                                    type="text"
+                                    placeholder="Enter new course title..."
+                                    value={data.title}
+                                    onChange={e => setData("title", e.target.value)}
+                                    className="text-lg text-gray-900"
+                                ></input>
+                                <InputError message={errors.message} className="mt-2" />
+                                <div className="space-x-2">
+                                    <PrimaryButton className="mt-4">Save</PrimaryButton>
+                                    <button
+                                        className="mt-4"
+                                        onClick={() => {
+                                            setEditing(false);
+                                            reset();
+                                            clearErrors();
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        ) : (
+                            <h1 className="text-lg text-gray-900">{course.title}</h1>
+                        )}
                         <Dropdown>
                             <Dropdown.Trigger>
                                 <button>
@@ -57,31 +83,6 @@ export default function Course({ course, userCourses, admin }) {
                             </Dropdown.Content>
                         </Dropdown>
                     </div>
-                    {editing && (
-                        <form onSubmit={submit}>
-                            <input
-                                type="text"
-                                placeholder="Enter new course title..."
-                                value={data.content}
-                                onChange={e => setData("title", e.target.value)}
-                                className="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
-                            ></input>
-                            <InputError message={errors.message} className="mt-2" />
-                            <div className="space-x-2">
-                                <PrimaryButton className="mt-4">Save</PrimaryButton>
-                                <button
-                                    className="mt-4"
-                                    onClick={() => {
-                                        setEditing(false);
-                                        reset();
-                                        clearErrors();
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    )}
                 </div>
             ) : (
                 <div>
