@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Type;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Auth;
-
 
 class TypeController extends Controller
 {
@@ -17,10 +16,12 @@ class TypeController extends Controller
      */
     public function index(): Response
     {
-        if (!Auth::user()->is_admin) {
+        if (! Auth::user()->is_admin) {
             $this->authorize('index');
+
             return Inertia::render('Posts/Index');
         }
+
         return Inertia::render('Types/Index');
     }
 
@@ -37,7 +38,7 @@ class TypeController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (!Auth::user()->is_admin) {
+        if (! Auth::user()->is_admin) {
             return redirect()->back();
         }
 

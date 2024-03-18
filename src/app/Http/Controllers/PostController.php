@@ -129,11 +129,11 @@ class PostController extends Controller
             ->select('posts.id')
             ->when($types !== null, function ($query) use ($types) {
                 $query->join('post_type', 'posts.id', '=', 'post_type.post_id')
-                ->whereIn('post_type.type_id', $types);
+                    ->whereIn('post_type.type_id', $types);
             })
             ->when($labels !== null, function ($query) use ($labels) {
                 $query->join('label_post', 'posts.id', '=', 'label_post.post_id')
-                ->whereIn('label_post.label_id', $labels);
+                    ->whereIn('label_post.label_id', $labels);
             })
             ->when($courses !== null, function ($query) use ($courses) {
                 $query->whereIn('posts.course_id', $courses);
