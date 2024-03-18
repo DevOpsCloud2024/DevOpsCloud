@@ -126,14 +126,14 @@ class PostController extends Controller
         $courses = $request->course_ids;
 
         $wanted_posts = DB::table('posts')
-            ->join('label_post', 'posts.id', '=', 'label_post.post_id')
-            ->join('post_type', 'posts.id', '=', 'post_type.post_id')
             ->select('posts.id')
             ->when($types !== null, function ($query) use ($types) {
-                $query->whereIn('post_type.type_id', $types);
+                $query->join('post_type', 'posts.id', '=', 'post_type.post_id')
+                ->whereIn('post_type.type_id', $types);
             })
             ->when($labels !== null, function ($query) use ($labels) {
-                $query->whereIn('label_post.label_id', $labels);
+                $query->join('label_post', 'posts.id', '=', 'label_post.post_id')
+                ->whereIn('label_post.label_id', $labels);
             })
             ->when($courses !== null, function ($query) use ($courses) {
                 $query->whereIn('posts.course_id', $courses);

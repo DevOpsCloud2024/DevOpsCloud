@@ -6,6 +6,7 @@ use App\Models\Label;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response;
+use Illuminate\Support\Facades\Auth;
 
 class LabelController extends Controller
 {
@@ -30,6 +31,10 @@ class LabelController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if (!Auth::user()->is_admin) {
+            return redirect()->back();
+        }
+        
         $validated = $request->validate([
             'new_label' => 'required|string|max:64',
         ]);
