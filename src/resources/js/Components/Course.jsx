@@ -38,10 +38,9 @@ export default function Course({ course, userCourses, admin }) {
                     )}
                 </div>
             </form>
-            <div className="space-x-2" style={{marginTop: "20px"}}>
-                <CourseFilterButton course={course}/>
+            <div className="space-x-2" style={{ marginTop: "20px" }}>
+                <CourseFilterButton course={course} />
             </div>
-            
         </div>
     );
 }
