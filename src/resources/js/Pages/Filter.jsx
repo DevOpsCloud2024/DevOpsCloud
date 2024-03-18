@@ -6,7 +6,7 @@ import Select from "react-select";
 import PrimaryButton from "@/Components/PrimaryButton";
 import InputError from "@/Components/InputError";
 
-export default function Filter({ auth, filtered_posts, types, labels, courses}) {
+export default function Filter({ auth, filtered_posts, types, labels, courses }) {
     let options_types = [];
     types.map(t => options_types.push({ value: t.id, label: t.name }));
     let options_labels = [];
