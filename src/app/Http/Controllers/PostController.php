@@ -122,7 +122,7 @@ class PostController extends Controller
     public function filtering(Request $request)
     {
         $types = $request->type_ids;
-        $labels =$request->label_ids;
+        $labels = $request->label_ids;
         $courses = $request->course_ids;
 
         $wanted_posts = DB::table('posts')
