@@ -101,7 +101,7 @@ function createTopic(string $course): string|false
  */
 function deleteTopic(?string $topic): bool
 {
-    if (App::environment(['local']) || !isset($topic)) {
+    if (App::environment(['local']) || ! isset($topic)) {
         return false;
     }
 
@@ -132,7 +132,7 @@ function deleteTopic(?string $topic): bool
  */
 function subscribeToTopic(string $email, ?string $topic): string|false
 {
-    if (App::environment(['local']) || !isset($topic)) {
+    if (App::environment(['local']) || ! isset($topic)) {
         return false;
     }
 
@@ -166,7 +166,7 @@ function subscribeToTopic(string $email, ?string $topic): string|false
  */
 function confirmSubscription(?string $subscription, ?string $topic): bool
 {
-    if (App::environment(['local']) || !isset($subscription, $topic)) {
+    if (App::environment(['local']) || ! isset($subscription, $topic)) {
         return false;
     }
 
@@ -197,7 +197,7 @@ function confirmSubscription(?string $subscription, ?string $topic): bool
  */
 function deleteSubscription(?string $subscription): bool
 {
-    if (App::environment(['local']) || !isset($subscription)) {
+    if (App::environment(['local']) || ! isset($subscription)) {
         return false;
     }
 
@@ -222,14 +222,14 @@ function deleteSubscription(?string $subscription): bool
 /**
  * Sends a notification to subscribers when a new document is uploaded.
  *
- * @param  ?string $topic topic ARN
- * @param  string $course course name
- * @param  string $title title of document
+ * @param  ?string  $topic  topic ARN
+ * @param  string  $course  course name
+ * @param  string  $title  title of document
  * @return bool whether it succeeded or not
  */
 function sendCourseNotification(?string $topic, string $course, string $title): bool
 {
-    if (App::environment(['local']) || !isset($topic)) {
+    if (App::environment(['local']) || ! isset($topic)) {
         return false;
     }
 
