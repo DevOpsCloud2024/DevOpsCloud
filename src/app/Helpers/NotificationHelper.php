@@ -29,7 +29,7 @@ function sendWarningNotification(string $title): void
  */
 function sendLocalMail(string $title): void
 {
-    Mail::to('test@mailhog.local')->send(new NotificationMail($title));
+    Mail::to('test@mailhog.local')->send(new NotificationMail($title, route('posts.index')));
 }
 
 /**
@@ -45,7 +45,8 @@ function sendNotification(string $title): bool
         'version' => '2010-03-31',
     ]);
 
-    $message = "The document \"$title\" is receiving low ratings. Please consider taking action.";
+    $link = route('posts.index');
+    $message = "The document \"$title\" is receiving low ratings. Please consider taking action here: $link.";
     $topic = 'arn:aws:sns:us-east-1:031648496160:WarningAboutDocument';
 
     try {
@@ -237,7 +238,8 @@ function sendCourseNotification(?string $topic, string $course, string $title): 
         'version' => '2010-03-31',
     ]);
 
-    $message = "A new document \"$title\" was uploaded for course \"$course\".";
+    $link = route('posts.index');
+    $message = "A new document \"$title\" was uploaded for course \"$course\". You can view it here: $link.";
 
     try {
         $result = $SnSclient->publish([
