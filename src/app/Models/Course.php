@@ -11,19 +11,18 @@ class Course extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    // protected $fillable = [
-    //     'title',
-    // ];
-
-    /**
      * Get the users that are enrolled in the course.
      */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'courses_users', 'course_id', 'user_id');
+    }
+
+    /**
+     * Get the posts belonging to a course.
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

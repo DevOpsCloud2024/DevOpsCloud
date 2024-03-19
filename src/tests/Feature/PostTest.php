@@ -21,6 +21,7 @@ class PostTest extends TestCase
                 'title' => 'Post Title',
                 'content' => 'This is a post',
                 'file' => UploadedFile::fake()->create('summary.pdf'),
+                'course_id' => 1,
             ]);
 
         $this->assertDatabaseHas('posts', [
@@ -36,6 +37,7 @@ class PostTest extends TestCase
             'title' => 'Post Title',
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
+            'course_id' => 1,
         ]);
 
         $this->assertDatabaseCount('posts', 0);
@@ -50,6 +52,7 @@ class PostTest extends TestCase
                 'title' => 'Post Title',
                 'content' => 'This is a post',
                 'file' => '',
+                'course_id' => 1,
             ]);
 
         $this->assertDatabaseCount('posts', 0);
@@ -64,6 +67,7 @@ class PostTest extends TestCase
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
             'filepath' => 'summary.pdf',
+            'course_id' => 1,
         ]);
 
         $this->assertDatabaseCount('posts', 1);
@@ -87,6 +91,7 @@ class PostTest extends TestCase
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
             'filepath' => 'summary.pdf',
+            'course_id' => 1,
         ]);
 
         $this->assertDatabaseCount('posts', 1);
@@ -110,6 +115,7 @@ class PostTest extends TestCase
             'content' => 'This is a post',
             'file' => UploadedFile::fake()->create('summary.pdf'),
             'filepath' => 'summary.pdf',
+            'course_id' => 1,
         ]);
 
         $this->assertDatabaseCount('posts', 1);

@@ -58,6 +58,6 @@ class User extends Authenticatable
      */
     public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class, 'courses_users', 'user_id', 'course_id');
+        return $this->belongsToMany(Course::class, 'courses_users', 'user_id', 'course_id')->withPivot('sns_subscription');
     }
 }

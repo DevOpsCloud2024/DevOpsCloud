@@ -51,6 +51,12 @@ class CourseController extends Controller
         // Fill the course instance with validated data
         $course->title = $validated['title'];
 
+        // Create an SNS topic
+        $result = createTopic($course->title);
+        if ($result !== false) {
+            $course->sns_topic = $result;
+        }
+
         // Save the course to the database
         $course->save();
 
@@ -81,14 +87,25 @@ class CourseController extends Controller
         $user = $request->user();
         $enrolled = $request->user()->courses->contains($course->id);
         if ($enrolled) {
+            // Delete SNS subscription
+            $subscription = $user->courses()->where('course_id', $course->id)->first()->pivot->sns_subscription;
+            deleteSubscription($subscription);
+
             // Remove the enrollment of the authenticated user in the specified course
             $user->courses()->detach($course->id);
-        } else {
-            // Enroll the authenticated user in the specified course
-            $user->courses()->attach($course->id);
-        }
 
-        // $course->update($course);
+        } else {
+            // Subscribe to SNS topic
+            $subscription = subscribeToTopic($user->email, $course->sns_topic);
+
+            // Enroll the authenticated user in the specified course
+            if ($subscription !== false) {
+                confirmSubscription($subscription, $course->sns_topic);
+                $user->courses()->attach($course->id, ['sns_subscription' => $subscription]);
+            } else {
+                $user->courses()->attach($course->id);
+            }
+        }
 
         return redirect(route('courses.index'));
     }
@@ -100,21 +117,4 @@ class CourseController extends Controller
     {
         //
     }
-
-    // /**
-    //  * Enroll a student to a course.
-    //  */
-    // public function enroll(Request $request, Course $course, bool $enroll): RedirectResponse
-    // {
-    //     $user = $request->user();
-    //     if ($enroll) {
-    //         // Enroll the authenticated user in the specified course
-    //         $user->courses()->attach($course->id);
-    //         // return redirect()->route('courses.index')->with('Success', 'You have been enrolled in the course successfully.');
-    //     } else {
-    //         // Remove the enrollment of the authenticated user in the specified course
-    //         $user->courses()->detach($course->id);
-    //     }
-    //     return redirect(route('courses.index'));
-    // }
 }

@@ -4,18 +4,29 @@ import Post from "@/Components/Post";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { useForm, Head } from "@inertiajs/react";
+import Select from "react-select";
 
-export default function Index({ auth, posts }) {
+export default function Index({ auth, posts, types, labels, courses }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         title: "",
         content: "",
         file: "",
+        type_ids: [],
+        label_ids: [],
+        course_id: 0,
     });
 
     const submit = e => {
         e.preventDefault();
         post(route("posts.store"), { onSuccess: () => reset() });
     };
+
+    let options_types = [];
+    types.map(t => options_types.push({ value: t.id, label: t.name }));
+    let options_labels = [];
+    labels.map(l => options_labels.push({ value: l.id, label: l.name }));
+    let options_courses = [];
+    courses.map(c => options_courses.push({ value: c.id, label: c.title }));
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -35,6 +46,48 @@ export default function Index({ auth, posts }) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData("content", e.target.value)}
                     ></textarea>
+                    <Select
+                        isMulti
+                        placeholder="Type of document"
+                        name="colors"
+                        options={options_types}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen =>
+                            setData(
+                                "type_ids",
+                                chosen.map(c => c.value)
+                            )
+                        }
+                    />
+                    <Select
+                        isMulti
+                        placeholder="Labels"
+                        name="colors"
+                        options={options_labels}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen =>
+                            setData(
+                                "label_ids",
+                                chosen.map(c => c.value)
+                            )
+                        }
+                    />
+                    <Select
+                        placeholder="Course"
+                        name="colors"
+                        options={options_courses}
+                        className="type"
+                        classNamePrefix="select"
+                        isSearchable="true"
+                        isClearable="true"
+                        onChange={chosen => setData("course_id", chosen.value)}
+                    />
                     <input
                         type="file"
                         accept=".pdf"

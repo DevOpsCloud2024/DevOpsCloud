@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PrimaryButton from "@/Components/PrimaryButton";
+import CourseFilterButton from "@/Components/CourseFilterButton";
 import { useForm, usePage } from "@inertiajs/react";
 
 export default function Course({ course, userCourses, admin }) {
@@ -37,6 +38,9 @@ export default function Course({ course, userCourses, admin }) {
                     )}
                 </div>
             </form>
+            <div className="space-x-2" style={{ marginTop: "20px" }}>
+                <CourseFilterButton course={course} />
+            </div>
         </div>
     );
 }

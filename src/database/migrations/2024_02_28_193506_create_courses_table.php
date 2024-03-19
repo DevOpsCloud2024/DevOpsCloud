@@ -16,6 +16,15 @@ return new class extends Migration
             $table->string('title')->unique();
             $table->timestamps();
         });
+
+        Schema::create('courses_users', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('course_id');
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+        });
     }
 
     /**
@@ -24,5 +33,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('courses');
+        Schema::dropIfExists('courses_users');
     }
 };
