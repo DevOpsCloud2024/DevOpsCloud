@@ -70,7 +70,7 @@ jobs:
           skip_fetch: false
 
   run-tests:
-    needs: [eslint]
+    needs: [eslint, phplint]
     runs-on: ubuntu-latest
     defaults:
       run:
