@@ -145,6 +145,7 @@ jobs:
         run: |
             echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> "$GITHUB_ENV"
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} " >> "$GITHUB_ENV"
+            echo "TF_VAR_app_key=${{ secrets.TF_VAR_APP_KEY }}" >> "$GITHUB_ENV"
 
       - name: Setup AWS
         uses: aws-actions/configure-aws-credentials@v4
@@ -166,7 +167,7 @@ jobs:
         run: terraform fmt
 
       - name: Terraform plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -out=tfplan
 
       - name: Terraform apply
-        run: terraform apply -auto-approve
+        run: terraform apply -no-color -auto-approve tfplan
