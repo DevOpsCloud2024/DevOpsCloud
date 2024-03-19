@@ -59,7 +59,7 @@ export default function Post({ post }) {
                             <small className="text-sm text-gray-600"> &middot; edited</small>
                         )} */}
                     </div>
-                    {(post.user.id === auth.user.id || auth.user.is_admin) ? (
+                    {post.user.id === auth.user.id || auth.user.is_admin ? (
                         <Dropdown>
                             <Dropdown.Trigger>
                                 <button>
@@ -89,7 +89,9 @@ export default function Post({ post }) {
                                 </Dropdown.Link>
                             </Dropdown.Content>
                         </Dropdown>
-                    ) : <div></div>}
+                    ) : (
+                        <div></div>
+                    )}
                 </div>
                 {editing ? (
                     <form onSubmit={submit}>
