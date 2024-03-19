@@ -86,7 +86,14 @@ export default function Index({ auth, posts, types, labels, courses }) {
                         classNamePrefix="select"
                         isSearchable="true"
                         isClearable="true"
-                        onChange={chosen => setData("course_id", chosen.value)}
+                        onChange={(chosen) => {
+                            if (chosen !== null) {
+                                setData("course_id", chosen.value);
+                            } else {
+                                // Handle case where chosen is null (e.g., no option selected)
+                                setData("course_id", null);
+                            }
+                        }}
                     />
                     <input
                         type="file"

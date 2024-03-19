@@ -50,9 +50,6 @@ export default function Course({ course, userCourses, admin }) {
                                     </button>
                                 </div>
                             </form>
-                            <div className="space-x-2" style={{ marginTop: "20px" }}>
-                                <CourseFilterButton course={course} />
-                            </div>
                         ) : (
                             <h1 className="text-lg text-gray-900">{course.title}</h1>
                         )}
@@ -70,6 +67,7 @@ export default function Course({ course, userCourses, admin }) {
                                 </button>
                             </Dropdown.Trigger>
                             <Dropdown.Content>
+                                <CourseFilterButton course={course} />
                                 <button
                                     className="flex w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out"
                                     onClick={() => setEditing(true)}
@@ -118,7 +116,6 @@ export default function Course({ course, userCourses, admin }) {
                     </Dropdown.Link>
                 </div>
             )}
-          </div>
         </div>
     );
 }
