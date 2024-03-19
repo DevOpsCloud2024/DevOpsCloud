@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
-    
+
 Route::get('/', [PostController::class, 'index'])->middleware('auth');
 
 Route::resource('courses', CourseController::class)
