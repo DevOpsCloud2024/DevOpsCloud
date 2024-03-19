@@ -29,7 +29,7 @@ function sendWarningNotification(string $title): void
  */
 function sendLocalMail(string $title): void
 {
-    Mail::to('test@mailhog.local')->send(new NotificationMail($title));
+    Mail::to('test@mailhog.local')->send(new NotificationMail($title, route('posts.index')));
 }
 
 /**
@@ -45,7 +45,8 @@ function sendNotification(string $title): bool
         'version' => '2010-03-31',
     ]);
 
-    $message = "The document \"$title\" is receiving low ratings. Please consider taking action.";
+    $link = route('posts.index');
+    $message = "The document \"$title\" is receiving low ratings. Please consider taking action here: $link.";
     $topic = 'arn:aws:sns:us-east-1:031648496160:WarningAboutDocument';
 
     try {
@@ -95,12 +96,12 @@ function createTopic(string $course): string|false
 /**
  * Deletes a topic.
  *
- * @param  string  $topic  ARN of topic
+ * @param  ?string  $topic  ARN of topic
  * @return bool whether it succeeded or not
  */
-function deleteTopic(string $topic): bool
+function deleteTopic(?string $topic): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || ! isset($topic)) {
         return false;
     }
 
@@ -126,12 +127,12 @@ function deleteTopic(string $topic): bool
  * Subscribe a user to an SNS topic.
  *
  * @param  string  $email  email of user
- * @param  string  $topic  SNS topic
+ * @param  ?string  $topic  SNS topic
  * @return string ARN of new subscription, or false if it failed
  */
-function subscribeToTopic(string $email, string $topic): string|false
+function subscribeToTopic(string $email, ?string $topic): string|false
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || ! isset($topic)) {
         return false;
     }
 
@@ -159,13 +160,13 @@ function subscribeToTopic(string $email, string $topic): string|false
 /**
  * Confirms subscription to an SNS topic.
  *
- * @param  string  $subscription  subscription ARN
- * @param  string  $topic  topic ARN
+ * @param  ?string  $subscription  subscription ARN
+ * @param  ?string  $topic  topic ARN
  * @return bool whether it succeeded or not
  */
-function confirmSubscription(string $subscription, string $topic): bool
+function confirmSubscription(?string $subscription, ?string $topic): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || ! isset($subscription, $topic)) {
         return false;
     }
 
@@ -191,12 +192,12 @@ function confirmSubscription(string $subscription, string $topic): bool
 /**
  * Delete subscription to an SNS topic.
  *
- * @param  string  $subscription  subscription ARN
+ * @param  ?string  $subscription  subscription ARN
  * @return bool whether it succeeded or not
  */
-function deleteSubscription(string $subscription): bool
+function deleteSubscription(?string $subscription): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || ! isset($subscription)) {
         return false;
     }
 
@@ -218,9 +219,17 @@ function deleteSubscription(string $subscription): bool
     }
 }
 
-function sendCourseNotification(string $topic, string $course, string $title): bool
+/**
+ * Sends a notification to subscribers when a new document is uploaded.
+ *
+ * @param  ?string  $topic  topic ARN
+ * @param  string  $course  course name
+ * @param  string  $title  title of document
+ * @return bool whether it succeeded or not
+ */
+function sendCourseNotification(?string $topic, string $course, string $title): bool
 {
-    if (App::environment(['local'])) {
+    if (App::environment(['local']) || ! isset($topic)) {
         return false;
     }
 
@@ -229,7 +238,8 @@ function sendCourseNotification(string $topic, string $course, string $title): b
         'version' => '2010-03-31',
     ]);
 
-    $message = "A new document \"$title\" was uploaded for course \"$course\".";
+    $link = route('posts.index');
+    $message = "A new document \"$title\" was uploaded for course \"$course\". You can view it here: $link.";
 
     try {
         $result = $SnSclient->publish([

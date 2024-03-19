@@ -1,1 +1,1 @@
-The document "{{$title}}" is receiving low ratings. Please consider taking action.
+The document "{{$title}}" is receiving low ratings. Please consider taking action <a href="{{$link}}">here</a>.

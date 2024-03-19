@@ -15,7 +15,7 @@ class NotificationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $title)
+    public function __construct(private $title, private $link)
     {
         //
     }
@@ -37,7 +37,7 @@ class NotificationMail extends Mailable
     {
         return new Content(
             view: 'mail.notification',
-            with: ['title' => $this->title],
+            with: ['title' => $this->title, 'link' => $this->link],
         );
     }
 
