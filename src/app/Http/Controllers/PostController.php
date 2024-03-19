@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,9 +43,14 @@ class PostController extends Controller
         ]);
 
         $validated['filepath'] = $validated['file']->store('public');
-        // Remove the 'public/' prefix from the file path
-        $validated['filepath'] = substr($validated['filepath'], 7);
-        $validated['filepath'] = asset('storage/'.$validated['filepath']);
+
+        if (!App::environment('production')) {
+            // Remove the 'public/' prefix from the file path
+            $validated['filepath'] = substr($validated['filepath'], 7);
+            $validated['filepath'] = asset('storage/'.$validated['filepath']);
+        } else {
+            $validated['filepath'] = Storage::url($validated['filepath']);
+        }
 
         $request->user()->posts()->create($validated);
 
