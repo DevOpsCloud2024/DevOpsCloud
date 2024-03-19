@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Dropdown from "@/Components/Dropdown";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
+import CourseFilterButton from "@/Components/CourseFilterButton";
 import { useForm, usePage } from "@inertiajs/react";
 
 export default function Course({ course, userCourses, admin }) {
@@ -49,6 +50,9 @@ export default function Course({ course, userCourses, admin }) {
                                     </button>
                                 </div>
                             </form>
+                            <div className="space-x-2" style={{ marginTop: "20px" }}>
+                                <CourseFilterButton course={course} />
+                            </div>
                         ) : (
                             <h1 className="text-lg text-gray-900">{course.title}</h1>
                         )}
@@ -114,6 +118,7 @@ export default function Course({ course, userCourses, admin }) {
                     </Dropdown.Link>
                 </div>
             )}
+          </div>
         </div>
     );
 }

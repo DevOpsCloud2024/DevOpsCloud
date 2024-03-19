@@ -52,6 +52,12 @@ class CourseController extends Controller
         // Fill the course instance with validated data
         $course->title = $validated['title'];
 
+        // Create an SNS topic
+        $result = createTopic($course->title);
+        if ($result !== false) {
+            $course->sns_topic = $result;
+        }
+
         // Save the course to the database
         $course->save();
 
@@ -97,11 +103,24 @@ class CourseController extends Controller
         $user = auth()->user();
         $enrolled = $user->courses->contains($course->id);
         if ($enrolled) {
+            // Delete SNS subscription
+            $subscription = $user->courses()->where('course_id', $course->id)->first()->pivot->sns_subscription;
+            deleteSubscription($subscription);
+
             // Remove the enrollment of the authenticated user in the specified course
             $user->courses()->detach($course->id);
+
         } else {
+            // Subscribe to SNS topic
+            $subscription = subscribeToTopic($user->email, $course->sns_topic);
+
             // Enroll the authenticated user in the specified course
-            $user->courses()->attach($course->id);
+            if ($subscription !== false) {
+                confirmSubscription($subscription, $course->sns_topic);
+                $user->courses()->attach($course->id, ['sns_subscription' => $subscription]);
+            } else {
+                $user->courses()->attach($course->id);
+            }
         }
 
         return redirect(route('courses.index'));

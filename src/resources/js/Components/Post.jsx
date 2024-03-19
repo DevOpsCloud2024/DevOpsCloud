@@ -11,6 +11,8 @@ import GiveRating from "@/Components/GiveRating";
 dayjs.extend(relativeTime);
 
 export default function Post({ post }) {
+    const labels = post.labels.map(label => label.name);
+    const types = post.types.map(type => type.name);
     const { auth } = usePage().props;
 
     const [editing, setEditing] = useState(false);
@@ -50,6 +52,15 @@ export default function Post({ post }) {
                         </small>
                         {post.created_at !== post.updated_at && (
                             <small className="text-sm text-gray-600"> &middot; edited</small>
+                        )}
+                        {post.course && (
+                            <p className="text-lg text-green-900">Course: {post.course.title}</p>
+                        )}
+                        {types.length !== 0 && (
+                            <p className="text-lg text-blue-900">Types: {types.join(", ")}</p>
+                        )}
+                        {labels.length !== 0 && (
+                            <p className="text-lg text-green-900">Labels: {labels.join(", ")}</p>
                         )}
                         <AverageRating post={post} />
                         {/* <small className="ml-2 text-sm text-gray-600">
