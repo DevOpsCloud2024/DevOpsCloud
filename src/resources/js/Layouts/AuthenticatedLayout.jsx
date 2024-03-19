@@ -38,12 +38,16 @@ export default function Authenticated({ user, header, children }) {
                                     Filter
                                 </NavLink>
 
-                                <NavLink
-                                    href={route("types.index")}
-                                    active={route().current("types.index")}
-                                >
-                                    Types
-                                </NavLink>
+                                {user.is_admin ? (
+                                    <NavLink
+                                        href={route("types.index")}
+                                        active={route().current("types.index")}
+                                    >
+                                        Types
+                                    </NavLink>
+                                ) : (
+                                    ""
+                                )}
 
                                 <NavLink
                                     href={route("courses.index")}
@@ -154,12 +158,16 @@ export default function Authenticated({ user, header, children }) {
                         >
                             Filter
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route("types.index")}
-                            active={route().current("types.index")}
-                        >
-                            Types
-                        </ResponsiveNavLink>
+                        {user.is_admin ? (
+                            <ResponsiveNavLink
+                                href={route("types.index")}
+                                active={route().current("types.index")}
+                            >
+                                Types
+                            </ResponsiveNavLink>
+                        ) : (
+                            ""
+                        )}
 
                         <ResponsiveNavLink
                             href={route("courses.index")}

@@ -6,47 +6,18 @@ import Select from "react-select";
 import PrimaryButton from "@/Components/PrimaryButton";
 import InputError from "@/Components/InputError";
 
-export default function Filter({ auth, filtered_posts, types, labels, label_post, post_type }) {
-    const [chosen_labels_ids, setLabel] = useState([]);
-    const [chosen_types_ids, setTypes] = useState([]);
-
+export default function Filter({ auth, filtered_posts, types, labels, courses }) {
     let options_types = [];
     types.map(t => options_types.push({ value: t.id, label: t.name }));
     let options_labels = [];
     labels.map(l => options_labels.push({ value: l.id, label: l.name }));
-
-    const [results, setResults] = useState([]);
-
-    function filtering() {
-        let founds = [];
-        if (chosen_labels_ids.length != 0) {
-            founds = label_post
-                .filter(lp => chosen_labels_ids.includes(lp.label_id))
-                .map(lp => lp.post_id);
-        }
-
-        if (chosen_types_ids.length == 0) {
-            setResults(founds);
-        } else {
-            let founds2 = [];
-            if (chosen_labels_ids.length != 0) {
-                founds2 = post_type
-                    .filter(
-                        pt => chosen_types_ids.includes(pt.type_id) && founds.includes(pt.post_id)
-                    )
-                    .map(pt => pt.post_id);
-            } else {
-                founds2 = post_type
-                    .filter(pt => chosen_types_ids.includes(pt.type_id))
-                    .map(pt => pt.post_id);
-            }
-            setResults(founds2);
-        }
-    }
+    let options_courses = [];
+    courses.map(c => options_courses.push({ value: c.id, label: c.title }));
 
     const { data, setData, get, processing, errors, reset } = useForm({
         type_ids: [],
         label_ids: [],
+        course_ids: [],
     });
 
     const submit = e => {
@@ -92,6 +63,25 @@ export default function Filter({ auth, filtered_posts, types, labels, label_post
                             onChange={chosen =>
                                 setData(
                                     "label_ids",
+                                    chosen.map(c => c.value)
+                                )
+                            }
+                        />
+                    </div>
+
+                    <div>
+                        <Select
+                            isMulti
+                            placeholder="Courses"
+                            name="colors"
+                            options={options_courses}
+                            className="type"
+                            classNamePrefix="select"
+                            isSearchable="true"
+                            isClearable="true"
+                            onChange={chosen =>
+                                setData(
+                                    "course_ids",
                                     chosen.map(c => c.value)
                                 )
                             }
