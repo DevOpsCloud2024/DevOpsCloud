@@ -19,20 +19,6 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::get('/filter', function () {
     return Inertia::render('Filter', [
         'filtered_posts' => [],
@@ -58,8 +44,14 @@ Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
+Route::get('/', [PostController::class, 'index'])->middleware('auth');
+
 Route::resource('courses', CourseController::class)
-    ->only(['index', 'store', 'update', 'destroy', 'enroll'])
+    ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::post('enroll/{course}', [CourseController::class, 'enroll'])
+    ->name('course.enroll')
     ->middleware(['auth', 'verified']);
 
 Route::post('rate/{post}/{rating}', [PostController::class, 'rate'])

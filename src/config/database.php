@@ -146,6 +146,26 @@ return [
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
 
+        'cluster' => env('REDIS_CLUSTER_ENABLED', false),
+        'clusters' => [
+            'default' => [
+                [
+                    'host' => env('REDIS_HOST', 'localhost'),
+                    'password' => env('REDIS_PASSWORD'),
+                    'port' => env('REDIS_PORT', 6379),
+                    'database' => 0,
+                ],
+            ],
+
+            'cache' => [
+                [
+                    'host' => env('REDIS_HOST', 'localhost'),
+                    'password' => env('REDIS_PASSWORD'),
+                    'port' => env('REDIS_PORT', 6379),
+                    'database' => 1,
+                ],
+            ],
+        ],
     ],
 
 ];

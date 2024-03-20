@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Course from "@/Components/Course";
 import { Head } from "@inertiajs/react";
