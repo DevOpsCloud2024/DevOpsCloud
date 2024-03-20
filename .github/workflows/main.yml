@@ -137,6 +137,12 @@ jobs:
       run:
         working-directory: ./terraform
 
+    outputs:
+      cluster-name: ${{ steps.cluster-name.outputs.cluster_name }}
+      webserver-service-name: ${{ steps.webserver-service-name.outputs.ecs_service_webserver_name }}
+      scheduler-service-name: ${{ steps.scheduler-service-name.outputs.ecs_service_scheduler_name }}
+      worker-service-name: ${{ steps.worker-service-name.outputs.ecs_service_worker_name }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -163,14 +169,26 @@ jobs:
       - name: Terraform validate
         run: terraform validate -no-color
 
-      - name: Terraform fmt
-        run: terraform fmt
-
       - name: Terraform plan
         run: terraform plan -no-color -out=tfplan
 
       - name: Terraform apply
         run: terraform apply -no-color -auto-approve tfplan
+
+      - name: Save Cluster name
+        id: cluster-name
+        run: echo "cluster_name=$(terraform output ecs_cluster_name)" >> "$GITHUB_OUTPUT"
+      - name: Save webserver service name
+        id: webserver-service-name
+        run: echo "ecs_service_webserver_name=$(terraform output ecs_service_webserver_name)" >> "$GITHUB_OUTPUT"
+
+      - name: Save scheduler service name
+        id: scheduler-service-name
+        run: echo "ecs_service_scheduler_name=$(terraform output ecs_service_scheduler_name)" >> "$GITHUB_OUTPUT"
+
+      - name: Save worker service name
+        id: worker-service-name
+        run: echo "ecs_service_worker_name=$(terraform output ecs_service_worker_name)" >> "$GITHUB_OUTPUT"
 
   push-to-registry:
     strategy:
@@ -205,3 +223,24 @@ jobs:
         run: |
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKER_PREFIX/Dockerfile .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  pull-image-to-task:
+    needs: [push-to-registry, deploy-terraform]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "eu-west-1"
+
+      - name: Update services
+        run: |
+            aws ecs update-service --cluster ${{ needs.deploy-terraform.outputs.cluster-name }} --service ${{ needs.deploy-terraform.outputs.webserver-service-name }} --force-new-deployment
+            aws ecs update-service --cluster ${{ needs.deploy-terraform.outputs.cluster-name }} --service ${{ needs.deploy-terraform.outputs.scheduler-service-name }} --force-new-deployment
+            aws ecs update-service --cluster ${{ needs.deploy-terraform.outputs.cluster-name }} --service ${{ needs.deploy-terraform.outputs.worker-service-name }} --force-new-deployment
