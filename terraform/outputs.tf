@@ -14,9 +14,9 @@ output "ecs_service_webserver_name" {
 }
 
 output "ecs_service_worker_name" {
-  value = aws_ecs_service.ecs_service_worker_name.name
+  value = aws_ecs_service.ecs_service_worker.name
 }
 
 output "ecs_service_scheduler_name" {
-  value = aws_ecs_service.ecs_service_scheduler_name.name
+  value = aws_ecs_service.ecs_service_scheduler.name
 }
