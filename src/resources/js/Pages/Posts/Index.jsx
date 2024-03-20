@@ -86,7 +86,7 @@ export default function Index({ auth, posts, types, labels, courses }) {
                         classNamePrefix="select"
                         isSearchable="true"
                         isClearable="true"
-                        onChange={(chosen) => {
+                        onChange={chosen => {
                             if (chosen !== null) {
                                 setData("course_id", chosen.value);
                             } else {
