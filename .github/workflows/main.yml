@@ -173,6 +173,11 @@ jobs:
         run: terraform apply -no-color -auto-approve tfplan
 
   push-to-registry:
+    strategy:
+      max-parallel: 2
+      matrix:
+        repo: ["laravel-repo", "nginx-repo"]
+
     needs: [deploy-terraform]
     runs-on: ubuntu-latest
 
@@ -194,8 +199,9 @@ jobs:
       - name: Build docker image
         env:
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            ECR_REPOSITORY: "laravel-repo"
+            ECR_REPOSITORY: ${{ matrix.repo }}
             IMAGE_TAG: ${{ github.sha }}
+            DOCKER_PREFIX: ${{ matrix.repo == 'laravel-repo' && 'php' || 'nginx' }}
         run: |
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f php/Dockerfile .
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKER_PREFIX/Dockerfile .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
