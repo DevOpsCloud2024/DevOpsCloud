@@ -3,7 +3,10 @@ output "app_url" {
   value = aws_alb.ecs_alb.dns_name
 }
 
-output "env_vars" {
-  sensitive = true
-  value     = local.env_vars
+output "laravel_repo" {
+  value = aws_ecr_repository.laravel_ecr_repo.repository_url
+}
+
+output "nginx_repo" {
+  value = aws_ecr_repository.nginx_ecr_repo.repository_url
 }
