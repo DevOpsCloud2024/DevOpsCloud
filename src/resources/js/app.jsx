@@ -6,7 +6,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 
-const appName = import.meta.env.APP_NAME || "Laravel";
+const appName = import.meta.env.APP_NAME || "StudentShare";
 
 createInertiaApp({
     title: title => `${title} - ${appName}`,
