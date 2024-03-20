@@ -118,7 +118,7 @@ export default function Post({ post }) {
                             </Dropdown.Content>
                         </Dropdown>
                     ) : (
-                        <></>
+                        <div></div>
                     )}
                 </div>
                 {editing ? (

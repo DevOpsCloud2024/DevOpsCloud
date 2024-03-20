@@ -29,14 +29,9 @@ jobs:
         with:
           preset: "laravel"
           verboseMode: "true"
+          testMode: "true"
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "🔨 Fix linting issues"
-          skip_fetch: true
   eslint:
-    needs: [phplint]
     runs-on: ubuntu-latest
 
     permissions:
@@ -72,10 +67,10 @@ jobs:
         with:
           commit_message: "🔨 Fix linting issues"
           commit_user_name: "GitHub Actions"
-          skip_fetch: true
+          skip_fetch: false
 
   run-tests:
-    needs: [eslint]
+    needs: [eslint, phplint]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -122,14 +117,130 @@ jobs:
       - name: Run tests
         run: ./vendor/bin/pest
 
-      - name: Setup Composer cache
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir) >> $GITHUB_OUTPUT"
+    #   - name: Setup Composer cache
+    #     id: composer-cache
+    #     run: echo "dir=$(composer config cache-files-dir) >> $GITHUB_OUTPUT"
 
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
+    #   - name: Cache Composer dependencies
+    #     uses: actions/cache@v4
+    #     with:
+    #       path: ${{ steps.composer-cache.outputs.dir }}
+    #       key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+    #       restore-keys: |
+    #         ${{ runner.os }}-composer-
+
+  deploy-terraform:
+    needs: [run-tests]
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    outputs:
+      cluster-name: ${{ steps.cluster-name.outputs.cluster_name }}
+      webserver-service-name: ${{ steps.webserver-service-name.outputs.ecs_service_webserver_name }}
+      scheduler-service-name: ${{ steps.scheduler-service-name.outputs.ecs_service_scheduler_name }}
+      worker-service-name: ${{ steps.worker-service-name.outputs.ecs_service_worker_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        run: |
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} " >> "$GITHUB_ENV"
+            echo "TF_VAR_app_key=${{ secrets.TF_VAR_APP_KEY }}" >> "$GITHUB_ENV"
+
+      - name: Setup AWS
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "eu-west-1"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate -no-color
+
+      - name: Terraform plan
+        run: terraform plan -no-color -out=tfplan
+
+      - name: Terraform apply
+        run: terraform apply -no-color -auto-approve tfplan
+
+      - name: Save Cluster name
+        id: cluster-name
+        run: echo "cluster_name=$(terraform output ecs_cluster_name)" >> "$GITHUB_OUTPUT"
+      - name: Save webserver service name
+        id: webserver-service-name
+        run: echo "ecs_service_webserver_name=$(terraform output ecs_service_webserver_name)" >> "$GITHUB_OUTPUT"
+
+      - name: Save scheduler service name
+        id: scheduler-service-name
+        run: echo "ecs_service_scheduler_name=$(terraform output ecs_service_scheduler_name)" >> "$GITHUB_OUTPUT"
+
+      - name: Save worker service name
+        id: worker-service-name
+        run: echo "ecs_service_worker_name=$(terraform output ecs_service_worker_name)" >> "$GITHUB_OUTPUT"
+
+  push-to-registry:
+    strategy:
+      max-parallel: 2
+      matrix:
+        repo: ["laravel-repo", "nginx-repo"]
+
+    needs: [deploy-terraform]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "eu-west-1"
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image
+        env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: ${{ matrix.repo }}
+            IMAGE_TAG: "latest"
+            DOCKER_PREFIX: ${{ matrix.repo == 'laravel-repo' && 'php' || 'nginx' }}
+        run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKER_PREFIX/Dockerfile .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  pull-image-to-task:
+    needs: [push-to-registry, deploy-terraform]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "eu-west-1"
+
+      - name: Update services
+        run: |
+            aws ecs update-service --cluster ${{ needs.deploy-terraform.outputs.cluster-name }} --service ${{ needs.deploy-terraform.outputs.webserver-service-name }} --force-new-deployment
+            aws ecs update-service --cluster ${{ needs.deploy-terraform.outputs.cluster-name }} --service ${{ needs.deploy-terraform.outputs.scheduler-service-name }} --force-new-deployment
+            aws ecs update-service --cluster ${{ needs.deploy-terraform.outputs.cluster-name }} --service ${{ needs.deploy-terraform.outputs.worker-service-name }} --force-new-deployment

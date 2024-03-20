@@ -41,13 +41,13 @@ function sendLocalMail(string $title): void
 function sendNotification(string $title): bool
 {
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
     ]);
 
     $link = route('posts.index');
     $message = "The document \"$title\" is receiving low ratings. Please consider taking action here: $link.";
-    $topic = 'arn:aws:sns:us-east-1:031648496160:WarningAboutDocument';
+    $topic = env('SNS_ADMIN_WARNING');
 
     try {
         $result = $SnSclient->publish([
@@ -76,7 +76,7 @@ function createTopic(string $course): string|false
     }
 
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
     ]);
 
@@ -106,7 +106,7 @@ function deleteTopic(?string $topic): bool
     }
 
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
         'version' => '2010-03-31',
     ]);
 
@@ -137,7 +137,7 @@ function subscribeToTopic(string $email, ?string $topic): string|false
     }
 
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
     ]);
 
@@ -171,7 +171,7 @@ function confirmSubscription(?string $subscription, ?string $topic): bool
     }
 
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
     ]);
 
@@ -202,7 +202,7 @@ function deleteSubscription(?string $subscription): bool
     }
 
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
     ]);
 
@@ -234,7 +234,7 @@ function sendCourseNotification(?string $topic, string $course, string $title): 
     }
 
     $SnSclient = new SnsClient([
-        'region' => 'us-east-1',
+        'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
     ]);
 
