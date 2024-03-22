@@ -116,7 +116,7 @@ export default function Course({ course, userCourses, admin }) {
                             {userEnrolled() ? "Quit" : "Enroll"}
                         </Dropdown.Link>
                     </div>
-                    
+
                     <Dropdown>
                         <Dropdown.Trigger>
                             <button>
