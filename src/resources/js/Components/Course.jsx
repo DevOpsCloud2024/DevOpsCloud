@@ -103,17 +103,37 @@ export default function Course({ course, userCourses, admin }) {
                     </div>
                 </div>
             ) : (
-                <div>
-                    <h1 className="mt-4 text-lg text-gray-900">{course.title}</h1>
-                    <Dropdown.Link
-                        as="button"
-                        style={{ width: "auto" }}
-                        className="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 false mt-4"
-                        href={route("course.enroll", { course: course.id })}
-                        method="post"
-                    >
-                        {userEnrolled() ? "Quit" : "Enroll"}
-                    </Dropdown.Link>
+                <div className="flex justify-between w-full items-center">
+                    <div>
+                        <h1 className="mt-4 text-lg text-gray-900">{course.title}</h1>
+                        <Dropdown.Link
+                            as="button"
+                            style={{ width: "auto" }}
+                            className="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 false mt-4"
+                            href={route("course.enroll", { course: course.id })}
+                            method="post"
+                        >
+                            {userEnrolled() ? "Quit" : "Enroll"}
+                        </Dropdown.Link>
+                    </div>
+                    
+                    <Dropdown>
+                        <Dropdown.Trigger>
+                            <button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 text-gray-400"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                </svg>
+                            </button>
+                        </Dropdown.Trigger>
+                        <Dropdown.Content>
+                            <CourseFilterButton course={course} />
+                        </Dropdown.Content>
+                    </Dropdown>
                 </div>
             )}
         </div>
