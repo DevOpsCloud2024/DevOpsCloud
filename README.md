@@ -1,3 +1,75 @@
+# StudentShare - The online platform
+
+## Table of contents
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Register and log in](#register-and-log-in)
+5. [Uploading](#uploading)
+6. [Rating](#rating)
+7. [Editing and deletion](#editing-and-deletion)
+8. [Course enrollment](#course-enrollment)
+9. [Filter](#filter)
+10. [Adding types or labels](#adding-types-or-labels)
+11. [Adding courses](#adding-courses)
+
+## Introduction
+This repository contains the code needed for our project for DevOps @ UvA. The project is a web application that allows students to share documents with each other. The documents can be rated on relevance and filtered on type, label, and course. Users can also enroll in courses and receive emails when new documents are posted related to that course. Admins can add types, labels, and courses. They can also delete posts and receive notifications when a post has a low rating.
+
+## Installation
+To locally run the application, you need to have Docker installed. You can download Docker [here](https://docs.docker.com/get-docker/). After installing Docker, you can simply clone the repistory and run the following command in the root directory of the project:
+```bash
+docker compose up --build nginx -d
+```
+
+This will build the containers needed for the application and run them. The application will be available at `localhost:8000`.
+
+After building the containers, several initializations are needed. The following commands need to be be run:
+```bash
+# Install the backend dependencies
+docker compose run --rm composer install
+# Install the frontend dependencies
+docker compose run --rm npm i
+# Generate the key for the application
+docker compose run --rm artisan key:generate
+# Migrate the database
+docker compose run --rm laravel-migrate-seed
+```
+
+To ensure the application builds correctly, an `.env` file needs to be created in the root directory of the project. The example file
+`.env.example` from the `src/` directory can be copied and renamed to `.env`. The following variables need to be changed:
+```bash
+DB_HOST=mysql
+DB_PASSWORD=laravel
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+REDIS_HOST=redis
+```
+
+## Usage
+
+To start using the application, the front-end assets need to be compiled through Vite. For production, the following command builds the assets:
+```bash
+docker compose run --rm --service-ports npm run build
+```
+However, for development it is recommended to build in development mode, to
+allow hot reloading:
+```bash
+docker compose run --rm --service-ports npm run dev
+```
+
+To install new packages, run migrations, or run any other artisan command, you can use the following commands:
+```bash
+# Install a new backend package
+docker compose run --rm composer require vendor/package
+# Run a migration
+docker compose run --rm laravel-migrate-seed
+# Run any artisan command
+docker compose run --rm artisan command
+# Format the backend code
+docker compose run --rm pint .
+```
+
 ## Register and log in
 
 The first step is to create an account and to log in. User who already have an account can log in immediately.
